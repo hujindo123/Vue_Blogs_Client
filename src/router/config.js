@@ -11,6 +11,7 @@ const ajax = Axios.create({
   baseURL: 'http://172.16.0.61:3001'
 })
 ajax.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+ajax.defaults.withCredentials = true
 const axios = (method, path, data, callback) => {
   data['token'] = sessionStorage.getItem('token')
   if (method === 'get') {

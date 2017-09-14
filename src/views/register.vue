@@ -7,7 +7,7 @@
       </group>
       <p class="yz">{{valid1}}</p>
       <group>
-        <x-input placeholder="昵称" required v-model="nickname"></x-input>
+        <x-input placeholder="昵称" required @on-change="getValid2" v-model="nickname"></x-input>
       </group>
       <p class="yz">{{valid2}}</p>
       <group>
@@ -24,10 +24,11 @@
       <p class="yz">{{valid5}}</p>
       <group>
         <div class="yzm">
-          <x-input placeholder="验证码" class="yzmInput" required></x-input>
+          <x-input placeholder="验证码" class="yzmInput" required @on-change="getValid6" v-model="validCode"></x-input>
           <div class="yzmButtons vux-1px-l" @click="getCaptchas"><img :src="captchas"/></div>
         </div>
       </group>
+      <p class="yz">{{valid6}}</p>
       <x-button class="submit" @click.native="submit">提交注册信息</x-button>
     </div>
   </div>
@@ -58,21 +59,9 @@
         valid4: '',
         rpwd: '',
         valid5: '',
-        captchas: '', // 验证码
-
-        demo1: false,
-        enterText: '',
-        iconType: '',
-        yzmm: function (value) {
-          return {
-            valid: value === this.password,
-            valid5: '密码不一致'
-          }
-        },
-        style: '',
-        disabledValue: 'hello',
-        debounceValue: '',
-        maxValue: ''
+        validCode: '', // 验证码
+        valid6: '',
+        captchas: ''
       }
     },
     created () {
@@ -84,38 +73,80 @@
         return new Promise(function (resolve, reject) {
           let patt = /^[a-zA-Z0-9]{4,16}$/
           self.valid1 = patt.test(self.account) ? ' ' : '必须是4到16位字母或数字组成'
-          if (self.valid1 === '') {
+          if (self.valid1 === ' ') {
             resolve()
           }
         })
       },
       getValid2 () {
-        this.valid2 = this.account ? '' : '请填写有效的昵称'
+        var self = this
+        return new Promise(function (resolve, reject) {
+          self.valid2 = self.nickname ? ' ' : '请填写有效的昵称'
+          if (self.valid2 === ' ') {
+            resolve()
+          }
+        })
       },
       getValid3 () {
-        let patt = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
-        this.valid3 = patt.test(this.email) ? ' ' : '请填写有效的Email'
+        var self = this
+        return new Promise(function (resolve, reject) {
+          let patt = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+          self.valid3 = patt.test(self.email) ? ' ' : '请填写有效的Email'
+          if (self.valid3 === ' ') {
+            resolve()
+          }
+        })
       },
       getValid4 () {
-        let patt = /^[a-zA-Z0-9]{4,16}$/
-        this.valid4 = patt.test(this.password) ? ' ' : '必须是4到16位字母或数字组成'
+        var self = this
+        return new Promise(function (resolve, reject) {
+          let patt = /^[a-zA-Z0-9]{4,16}$/
+          self.valid4 = patt.test(self.password) ? ' ' : '必须是4到16位字母或数字组成'
+          if (self.valid4 === ' ') {
+            resolve()
+          }
+        })
       },
       getValid5 () {
-        this.valid5 = this.password === this.rpwd ? ' ' : '密码不一致  '
+        var self = this
+        return new Promise(function (resolve, reject) {
+          self.valid5 = self.password === self.rpwd ? ' ' : '密码不一致  '
+          if (self.valid5 === ' ') {
+            console.log(5)
+            resolve()
+          }
+        })
       },
-      /* user method */
+      getValid6 () {
+        var self = this
+        return new Promise(function (resolve, reject) {
+          self.valid6 = self.validCode ? ' ' : '请填写有效的验证码'
+          if (self.valid6 === ' ') {
+            resolve()
+          }
+        })
+      },
       getCaptchas () {
         var self = this
-        axios('get', '/getCaptchas', {}, function (data) {
-          self.captchas = data.data
+        axios('get', '/getCaptchas', {}, data => {
+          if (data.code === 200) {
+            self.captchas = data.data
+          }
         })
       },
       submit () {
-        Promise.all([this.getValid1(), this.getValid2(), this.getValid3(), this.getValid4(), this.getValid5()]).then(function (val) {
-          let b = val.join('')
-          if (b.length > 0) {
-            return
-          }
+        let self = this
+        Promise.all([this.getValid1(), this.getValid2(), this.getValid3(), this.getValid4(), this.getValid5(), this.getValid6()]).then(function (val) {
+          axios('get', '/register',
+            {
+              account: self.account,
+              nickname: self.nickname,
+              email: self.email,
+              password: self.password,
+              validCode: self.validCode
+            }, data => {
+              debugger
+            })
         })
       }
     }
