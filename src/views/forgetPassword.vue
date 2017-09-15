@@ -3,22 +3,25 @@
     <vheader></vheader>
     <div class="wrapper_main">
       <group title="忘记了密码？">
-        <x-input placeholder="Email"></x-input>
+        <x-input placeholder="Email" class="yzmInput"></x-input>
       </group>
       <group>
         <div class="yzm">
           <x-input placeholder="验证码" class="yzmInput"></x-input>
-          <x-button class="yzmButton">12</x-button>
+          <div class="yzmButtons vux-1px-l" @click="getCaptchas"><img :src="captchas"/></div>
         </div>
       </group>
+
+
       <x-button type="primary" class="submit">找回密码</x-button>
     </div>
   </div>
 </template>
 
 <script>
+  import { axios } from '@/router/config'
   import { XInput, Group, XButton, Cell, XSwitch, CheckIcon } from 'vux'
-  import vheader from '../components/header/singinHeader'
+  import vheader from '@/components/header/singinHeader'
   export default {
     components: {
       vheader,
@@ -31,49 +34,29 @@
     },
     data () {
       return {
-        password: '123465',
-        demo1: false,
-        password2: '',
-        enterText: '',
-        valid1: false,
-        valid2: false,
-        iconType: '',
-        be2333: function (value) {
-          return {
-            valid: value === '2333',
-            msg: 'Must be 2333'
-          }
-        },
-        style: '',
-        disabledValue: 'hello',
-        debounceValue: '',
-        maxValue: ''
+        validCode: '', // 验证码
+        valid6: '',
+        captchas: ''
       }
     },
+    created () {
+      this.getCaptchas()
+    },
     methods: {
-      getValid1 () {
-        this.valid1 = this.$refs.input01.valid
-      },
-      getValid2 () {
-        this.valid2 = this.$refs.input02.valid
-      },
-      change (val) {
-        console.log(val)
-      },
-      onBlur (val) {
-        console.log('on blur', val)
-      },
-      onFocus (val, $event) {
-        console.log('on focus', val, $event)
-      },
-      onEnter (val) {
-        console.log('click enter!', val)
+      getCaptchas () {
+        var self = this
+        axios('get', '/getCaptchas', {}, data => {
+          if (data.code === 200) {
+            self.captchas = data.data
+          }
+        })
       }
     }
   }
 </script>
 <style lang="scss" rel="stylesheet/scss">
   @import "../assets/mixin";
+
   .register {
     display: flex;
     flex-flow: column;
@@ -84,12 +67,17 @@
       .yzm {
         display: flex;
         flex-flow: row;
+        align-items: center;
         .yzmInput {
           flex: 1;
         }
-        .yzmButton {
-          width: 130px;
-          background: #fff;
+        .yzmButtons {
+          width: 100px;
+          flex: 0 0 100px;
+          display: flex;
+          align-items: center;
+          text-align: center;
+          justify-content: center;
         }
       }
       .submit {

@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <vheader></vheader>
-    <div class="wrapper_main">
+    <div class="wrapper_main reg_main">
       <group title="新用户注册">
         <x-input placeholder="账号" required @on-change="getValid1" v-model="account"></x-input>
       </group>
@@ -30,14 +30,16 @@
       </group>
       <p class="yz">{{valid6}}</p>
       <x-button class="submit" @click.native="submit">提交注册信息</x-button>
+      <alert v-model="show2"  :content="content"></alert> <!--:title="title"-->
+
     </div>
   </div>
 </template>
 
 <script>
   import { axios } from '@/router/config'
-  import { XInput, Group, XButton, Cell, CheckIcon } from 'vux'
-  import vheader from '../components/header/singinHeader'
+  import { XInput, Group, XButton, Cell, CheckIcon, Alert } from 'vux'
+  import vheader from '@/components/header/singinHeader'
   export default {
     components: {
       vheader,
@@ -45,7 +47,8 @@
       XButton,
       Group,
       CheckIcon,
-      Cell
+      Cell,
+      Alert
     },
     data () {
       return {
@@ -61,7 +64,10 @@
         valid5: '',
         validCode: '', // 验证码
         valid6: '',
-        captchas: ''
+        captchas: '',
+        show2: false,
+        title: '',
+        content: ''
       }
     },
     created () {
@@ -145,7 +151,13 @@
               password: self.password,
               validCode: self.validCode
             }, data => {
-              debugger
+              if (data.status === 200) {
+                self.$router.push('/login')
+              } else {
+                self.show2 = true
+                // self.title = '登录失败'
+                self.content = data.message
+              }
             })
         })
       }
@@ -163,8 +175,10 @@
     .wrapper_main {
       flex: 1;
       overflow-y: scroll;
-      .weui-cells {
-        margin-top: 0;
+      &.reg_main {
+        .weui-cells {
+          margin-top: 0;
+        }
       }
       .yz {
         padding: 3px 10px;

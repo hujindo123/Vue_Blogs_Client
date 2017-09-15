@@ -1,28 +1,38 @@
 <template>
   <div class="register">
     <vheader></vheader>
-    <div class="wrapper_main">
+    <div class="wrapper_main reg_main">
       <group title="登录">
-        <x-input placeholder="用户名/Email"></x-input>
+        <x-input placeholder="用户名" required v-model="account" @on-change="getValid1"></x-input>
       </group>
+      <p class="yz">{{valid1}}</p>
       <group>
-        <x-input placeholder="密码"></x-input>
+        <x-input placeholder="密码" required type="password" v-model="password" @on-change="getValid4"></x-input>
       </group>
-      <div  class="login_state">
+      <p class="yz">{{valid4}}</p>
+      <alert v-model="show2"  :content="content"></alert> <!--:title="title"-->
+      <div class="login_state">
         <x-switch title="记住登录状态（60天）" v-model="demo1"></x-switch>
       </div>
-      <x-button type="primary" class="submit">登录</x-button>
+      <x-button type="primary" class="submit" @click.native="login">登录</x-button>
       <group class="login_more">
-        <cell value-align="left"><router-link to="/register">注册</router-link></cell>
-        <cell value-align="left"><router-link to="/forget">忘记密码</router-link></cell>
-        <cell value-align="left"><router-link to="/NotEmail">未收到邮件？</router-link></cell>
+        <cell value-align="left">
+          <router-link to="/register">注册</router-link>
+        </cell>
+        <cell value-align="left">
+          <router-link to="/forget">忘记密码</router-link>
+        </cell>
+        <cell value-align="left">
+          <router-link to="/NotEmail">未收到邮件？</router-link>
+        </cell>
       </group>
     </div>
   </div>
 </template>
 
 <script>
-  import { XInput, Group, XButton, Cell, XSwitch, CheckIcon } from 'vux'
+  import { axios } from '@/router/config'
+  import { XInput, Group, XButton, Cell, XSwitch, CheckIcon, Alert } from 'vux'
   import vheader from '../components/header/singinHeader'
   export default {
     components: {
@@ -32,47 +42,59 @@
       XButton,
       Group,
       CheckIcon,
-      Cell
+      Cell,
+      Alert
     },
     data () {
       return {
-        password: '123465',
-        demo1: false,
-        password2: '',
-        enterText: '',
-        valid1: false,
-        valid2: false,
-        iconType: '',
-        be2333: function (value) {
-          return {
-            valid: value === '2333',
-            msg: 'Must be 2333'
-          }
-        },
-        style: '',
-        disabledValue: 'hello',
-        debounceValue: '',
-        maxValue: ''
+        account: '',
+        valid1: '',
+        password: '',
+        valid4: '',
+        show2: false,
+        title: '',
+        content: '',
+        demo1: false
       }
     },
     methods: {
       getValid1 () {
-        this.valid1 = this.$refs.input01.valid
+        var self = this
+        return new Promise(function (resolve, reject) {
+          let patt = /^[a-zA-Z0-9]{4,16}$/
+          self.valid1 = patt.test(self.account) ? ' ' : '账号必须是4到16位字母或数字组成'
+          if (self.valid1 === ' ') {
+            resolve()
+          }
+        })
       },
-      getValid2 () {
-        this.valid2 = this.$refs.input02.valid
+      getValid4 () {
+        var self = this
+        return new Promise(function (resolve, reject) {
+          let patt = /^[a-zA-Z0-9]{4,16}$/
+          self.valid4 = patt.test(self.password) ? ' ' : '密码必须是4到16位字母或数字组成'
+          if (self.valid4 === ' ') {
+            resolve()
+          }
+        })
       },
-      change (val) {
-        console.log(val)
-      },
-      onBlur (val) {
-        console.log('on blur', val)
-      },
-      onFocus (val, $event) {
-        console.log('on focus', val, $event)
-      },
-      onEnter (val) {
-        console.log('click enter!', val)
+      login () {
+        let self = this
+        Promise.all([this.getValid1(), this.getValid4()]).then(function (val) {
+          axios('get', '/login',
+            {
+              account: self.account,
+              password: self.password
+            }, data => {
+              if (data.status === 200) {
+                self.$router.push('/')
+              } else {
+                self.show2 = true
+               // self.title = '登录失败'
+                self.content = data.message
+              }
+            })
+        })
       }
     }
   }
@@ -87,16 +109,16 @@
     position: relative;
     .wrapper_main {
       flex: 1;
-      .login_state{
+      .login_state {
         color: #999;
       }
       .submit {
         margin-top: 20px;
         margin-bottom: 20px;
       }
-      .login_more{
+      .login_more {
         margin-top: 40px;
-        a{
+        a {
           display: block;
         }
       }
