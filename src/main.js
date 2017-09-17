@@ -13,6 +13,8 @@ import article from '@/views/article'
 import forget from '@/views/forgetPassword'
 import NotEmail from '@/views/notAvailableEmail'
 import user from '@/views/user/index'
+import upload from '@/views/user/upload'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -54,6 +56,10 @@ const routes = [
   {
     path: '/user',
     component: user
+  },
+  {
+    path: '/upload',
+    component: upload
   }
 
 ]
