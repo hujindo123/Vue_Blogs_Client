@@ -12,6 +12,7 @@
   "dependencies": {
     "cropperjs": "^1.0.0",
     "fastclick": "^1.0.6",
+    "js-base64": "^2.3.2",
     "vue": "^2.2.2",
     "vue-router": "^2.2.0",
     "vuex": "^2.1.1",

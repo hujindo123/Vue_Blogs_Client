@@ -11,8 +11,8 @@
 </template>
 
 <script>
-  import { XInput, Group, XButton, Cell, XSwitch, CheckIcon } from 'vux'
-  import vheader from '../components/header/singinHeader'
+  import { XInput, Group, XButton, Cell, XSwitch, CheckIcon } from 'vux';
+  import vheader from '../../components/header/singinHeader';
   export default {
     components: {
       vheader,
@@ -36,38 +36,38 @@
           return {
             valid: value === '2333',
             msg: 'Must be 2333'
-          }
+          };
         },
         style: '',
         disabledValue: 'hello',
         debounceValue: '',
         maxValue: ''
-      }
+      };
     },
     methods: {
       getValid1 () {
-        this.valid1 = this.$refs.input01.valid
+        this.valid1 = this.$refs.input01.valid;
       },
       getValid2 () {
-        this.valid2 = this.$refs.input02.valid
+        this.valid2 = this.$refs.input02.valid;
       },
       change (val) {
-        console.log(val)
+        console.log(val);
       },
       onBlur (val) {
-        console.log('on blur', val)
+        console.log('on blur', val);
       },
       onFocus (val, $event) {
-        console.log('on focus', val, $event)
+        console.log('on focus', val, $event);
       },
       onEnter (val) {
-        console.log('click enter!', val)
+        console.log('click enter!', val);
       }
     }
-  }
+  };
 </script>
 <style lang="scss" rel="stylesheet/scss">
-  @import "../assets/mixin";
+  @import "../../assets/mixin";
   .register {
     display: flex;
     flex-flow: column;

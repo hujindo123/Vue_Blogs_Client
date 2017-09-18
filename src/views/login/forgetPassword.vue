@@ -11,17 +11,15 @@
           <div class="yzmButtons vux-1px-l" @click="getCaptchas"><img :src="captchas"/></div>
         </div>
       </group>
-
-
       <x-button type="primary" class="submit">找回密码</x-button>
     </div>
   </div>
 </template>
 
 <script>
-  import { axios } from '@/router/config'
-  import { XInput, Group, XButton, Cell, XSwitch, CheckIcon } from 'vux'
-  import vheader from '@/components/header/singinHeader'
+  import { axios } from '@/router/config';
+  import { XInput, Group, XButton, Cell, XSwitch, CheckIcon } from 'vux';
+  import vheader from '@/components/header/singinHeader';
   export default {
     components: {
       vheader,
@@ -34,28 +32,28 @@
     },
     data () {
       return {
-        validCode: '', // 验证码
+        validCode: '', //验证码
         valid6: '',
         captchas: ''
-      }
+      };
     },
     created () {
-      this.getCaptchas()
+      this.getCaptchas();
     },
     methods: {
       getCaptchas () {
-        var self = this
+        var self = this;
         axios('get', '/getCaptchas', {}, data => {
           if (data.code === 200) {
-            self.captchas = data.data
+            self.captchas = data.data;
           }
-        })
+        });
       }
     }
-  }
+  };
 </script>
 <style lang="scss" rel="stylesheet/scss">
-  @import "../assets/mixin";
+  @import "../../assets/mixin";
 
   .register {
     display: flex;

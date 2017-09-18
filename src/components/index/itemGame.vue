@@ -21,9 +21,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { Swiper, SwiperItem, Scroller, LoadMore } from 'vux'
-  import listA from '../../components/common/list1'
-  import listB from '../../components/common/list2'
+  import { Swiper, SwiperItem, Scroller, LoadMore } from 'vux';
+  import listA from '../../components/common/list1';
+  import listB from '../../components/common/list2';
 
   export default {
     data () {
@@ -42,7 +42,7 @@
           title: '送你一次旅行'
         }],
         bottomCount: 0
-      }
+      };
     },
     components: {
       Swiper,
@@ -55,20 +55,20 @@
     methods: {
       onScrollBottom () {
         if (this.onFetching) {
-          // do nothing
+          //do nothing
         } else {
-          this.onFetching = true
+          this.onFetching = true;
           setTimeout(() => {
-            this.bottomCount += 10
+            this.bottomCount += 10;
             this.$nextTick(() => {
-              this.$refs.scrollerBottom.reset()
-            })
-            this.onFetching = false
-          }, 2000)
+              this.$refs.scrollerBottom.reset();
+            });
+            this.onFetching = false;
+          }, 2000);
         }
       }
     }
-  }
+  };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

@@ -64,16 +64,16 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { Scroller, Group } from 'vux'
-  import navList from '../components/header/navList'
-  import comment from '../components/comment/comment'
-  import Vtextarea from '../components/comment/textarea'
+  import { Scroller, Group } from 'vux';
+  import navList from '../components/header/navList';
+  import comment from '../components/comment/comment';
+  import Vtextarea from '../components/comment/textarea';
   export default {
     data () {
       return {
         active: false,
         commentActive: false
-      }
+      };
     },
     components: {
       Group,
@@ -85,16 +85,16 @@
 
     methods: {
       showTab () {
-        this.active = !this.active
+        this.active = !this.active;
       },
       showComment () {
-        this.commentActive = true
+        this.commentActive = true;
       },
       back () {
-        this.active === true ? this.active = false : this.$router.go(-1)
+        this.active === true ? this.active = false : this.$router.go(-1);
       }
     }
-  }
+  };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

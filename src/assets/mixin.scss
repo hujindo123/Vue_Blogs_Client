@@ -1,5 +1,6 @@
 $color: #999;
 $themeColor: #ffd748;
+$themeColor1: #ffd23c;
 .router-fade-enter-active, .router-fade-leave-active {
   transition: opacity .3s;
 }
@@ -43,6 +44,9 @@ a {
 
 @mixin bg() {
   background: $themeColor;
+}
+@mixin bg-active(){
+  background: $themeColor1;
 }
 
 @mixin csh($color, $size, $lineHeight) {

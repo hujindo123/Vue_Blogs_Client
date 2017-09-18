@@ -52,7 +52,7 @@
     Datetime,
     XAddress,
     ChinaAddressV3Data
-  } from 'vux'
+  } from 'vux';
   export default {
     data () {
       return {
@@ -66,14 +66,14 @@
         ChinaAddressV3Data: ChinaAddressV3Data,
         address: [],
         demo1: ''
-      }
+      };
     },
     methods: {
       change (value) {
-        console.log('change', value)
+        console.log('change', value);
       },
       back () {
-        this.$router.go(-1)
+        this.$router.go(-1);
       }
     },
     components: {
@@ -90,7 +90,7 @@
       XAddress,
       ChinaAddressV3Data
     }
-  }
+  };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

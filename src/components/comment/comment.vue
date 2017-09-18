@@ -23,22 +23,22 @@
 
 
 <script type="text/ecmascript-6">
-  import Vtextarea from './textarea'
+  import Vtextarea from './textarea';
   export default {
     data () {
       return {
         showText: false
-      }
+      };
     },
     components: {
       Vtextarea
     },
     methods: {
       showdown () {
-        this.showText = !this.showText
+        this.showText = !this.showText;
       }
     }
-  }
+  };
 </script>
 
 

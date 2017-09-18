@@ -13,12 +13,12 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import cmheader from '@/components/header/commonHeader'
+  import cmheader from '@/components/header/commonHeader';
   export default {
     components: {
       cmheader
     }
-  }
+  };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

@@ -30,16 +30,17 @@
       </group>
       <p class="yz">{{valid6}}</p>
       <x-button class="submit" @click.native="submit">提交注册信息</x-button>
-      <alert v-model="show2"  :content="content"></alert> <!--:title="title"-->
+      <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
 
     </div>
   </div>
 </template>
 
 <script>
-  import { axios } from '@/router/config'
-  import { XInput, Group, XButton, Cell, CheckIcon, Alert } from 'vux'
-  import vheader from '@/components/header/singinHeader'
+  import { axios } from '@/router/config';
+  import Base64 from 'js-base64';
+  import { XInput, Group, XButton, Cell, CheckIcon, Alert } from 'vux';
+  import vheader from '@/components/header/singinHeader';
   export default {
     components: {
       vheader,
@@ -52,96 +53,97 @@
     },
     data () {
       return {
-        account: '', // 账号
+        account: '', //账号
         valid1: '',
-        nickname: '', // 昵称
+        nickname: '', //昵称
         valid2: '',
-        email: '', // 邮箱
+        email: '', //邮箱
         valid3: '',
         password: '',
         valid4: '',
         rpwd: '',
         valid5: '',
-        validCode: '', // 验证码
+        validCode: '', //验证码
         valid6: '',
         captchas: '',
         show2: false,
         title: '',
         content: ''
-      }
+      };
     },
     created () {
-      this.getCaptchas()
+      this.getCaptchas();
     },
     methods: {
       getValid1 () {
-        var self = this
+        var self = this;
         return new Promise(function (resolve, reject) {
-          let patt = /^[a-zA-Z0-9]{4,16}$/
-          self.valid1 = patt.test(self.account) ? ' ' : '必须是4到16位字母或数字组成'
+          let patt = /^[a-zA-Z0-9]{4,16}$/;
+          self.valid1 = patt.test(self.account) ? ' ' : '必须是4到16位字母或数字组成';
           if (self.valid1 === ' ') {
-            resolve()
+            resolve();
           }
-        })
+        });
       },
       getValid2 () {
-        var self = this
+        var self = this;
         return new Promise(function (resolve, reject) {
-          self.valid2 = self.nickname ? ' ' : '请填写有效的昵称'
+          self.valid2 = self.nickname ? ' ' : '请填写有效的昵称';
           if (self.valid2 === ' ') {
-            resolve()
+            resolve();
           }
-        })
+        });
       },
       getValid3 () {
-        var self = this
+        var self = this;
         return new Promise(function (resolve, reject) {
-          let patt = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
-          self.valid3 = patt.test(self.email) ? ' ' : '请填写有效的Email'
+          let patt = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+          self.valid3 = patt.test(self.email) ? ' ' : '请填写有效的Email';
           if (self.valid3 === ' ') {
-            resolve()
+            resolve();
           }
-        })
+        });
       },
       getValid4 () {
-        var self = this
+        var self = this;
         return new Promise(function (resolve, reject) {
-          let patt = /^[a-zA-Z0-9]{4,16}$/
-          self.valid4 = patt.test(self.password) ? ' ' : '必须是4到16位字母或数字组成'
+          let patt = /^[a-zA-Z0-9]{4,16}$/;
+          self.valid4 = patt.test(self.password) ? ' ' : '必须是4到16位字母或数字组成';
           if (self.valid4 === ' ') {
-            resolve()
+            resolve();
           }
-        })
+        });
       },
       getValid5 () {
-        var self = this
+        var self = this;
         return new Promise(function (resolve, reject) {
-          self.valid5 = self.password === self.rpwd ? ' ' : '密码不一致  '
+          self.valid5 = self.password === self.rpwd ? ' ' : '密码不一致  ';
           if (self.valid5 === ' ') {
-            console.log(5)
-            resolve()
+            console.log(5);
+            resolve();
           }
-        })
+        });
       },
       getValid6 () {
-        var self = this
+        var self = this;
         return new Promise(function (resolve, reject) {
-          self.valid6 = self.validCode ? ' ' : '请填写有效的验证码'
+          self.valid6 = self.validCode ? ' ' : '请填写有效的验证码';
           if (self.valid6 === ' ') {
-            resolve()
+            resolve();
           }
-        })
+        });
       },
       getCaptchas () {
-        var self = this
+        var self = this;
         axios('get', '/getCaptchas', {}, data => {
           if (data.code === 200) {
-            self.captchas = data.data
+            self.captchas = data.data;
           }
-        })
+        });
       },
       submit () {
-        let self = this
+        const b = Base64.Base64;
+        let self = this;
         Promise.all([this.getValid1(), this.getValid2(), this.getValid3(), this.getValid4(), this.getValid5(), this.getValid6()]).then(function (val) {
           axios('get', '/register',
             {
@@ -152,20 +154,20 @@
               validCode: self.validCode
             }, data => {
               if (data.status === 200) {
-                self.$router.push('/login')
+                self.$router.push(`/active?a=${b.encode(data.data.account)}&b=${data.data.randomString}`);
               } else {
-                self.show2 = true
-                // self.title = '登录失败'
-                self.content = data.message
+                self.show2 = true;
+                //self.title = '登录失败'
+                self.content = data.message;
               }
-            })
-        })
+            });
+        });
       }
     }
-  }
+  };
 </script>
 <style lang="scss" rel="stylesheet/scss">
-  @import "../assets/mixin";
+  @import "../../assets/mixin";
 
   .register {
     display: flex;

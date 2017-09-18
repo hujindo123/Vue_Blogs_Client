@@ -10,12 +10,12 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { XTextarea } from 'vux'
+  import { XTextarea } from 'vux';
   export default {
     components: {
       XTextarea
     }
-  }
+  };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

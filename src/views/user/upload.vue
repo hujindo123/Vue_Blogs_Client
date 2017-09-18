@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import Cropper from 'cropperjs'
+  import Cropper from 'cropperjs';
 
   export default {
     components: {},
@@ -37,84 +37,84 @@
         croppable: false,
         panel: false,
         url: ''
-      }
+      };
     },
     mounted () {
-      // 初始化这个裁剪框
-      var self = this
-      var image = document.getElementById('image')
+      //初始化这个裁剪框
+      var self = this;
+      var image = document.getElementById('image');
       this.cropper = new Cropper(image, {
         aspectRatio: 1,
         viewMode: 1,
         background: false,
         zoomable: false,
         ready: function () {
-          self.croppable = true
+          self.croppable = true;
         }
-      })
+      });
     },
     methods: {
       getObjectURL (file) {
-        var url = null
-        if (window.createObjectURL !== undefined) { // basic
-          url = window.createObjectURL(file)
-        } else if (window.URL !== undefined) { // mozilla(firefox)
-          url = window.URL.createObjectURL(file)
-        } else if (window.webkitURL !== undefined) { // webkit or chrome
-          url = window.webkitURL.createObjectURL(file)
+        var url = null;
+        if (window.createObjectURL !== undefined) { //basic
+          url = window.createObjectURL(file);
+        } else if (window.URL !== undefined) { //mozilla(firefox)
+          url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL !== undefined) { //webkit or chrome
+          url = window.webkitURL.createObjectURL(file);
         }
-        return url
+        return url;
       },
       change (e) {
-        let files = e.target.files || e.dataTransfer.files
-        if (!files.length) return
-        this.panel = true
-        this.picValue = files[0]
-        this.url = this.getObjectURL(this.picValue)
-        // 每次替换图片要重新得到新的url
+        let files = e.target.files || e.dataTransfer.files;
+        if (!files.length) return;
+        this.panel = true;
+        this.picValue = files[0];
+        this.url = this.getObjectURL(this.picValue);
+        //每次替换图片要重新得到新的url
         if (this.cropper) {
-          this.cropper.replace(this.url)
+          this.cropper.replace(this.url);
         }
-        this.panel = true
+        this.panel = true;
       },
       crop () {
-        this.panel = false
-        var croppedCanvas
-        var roundedCanvas
+        this.panel = false;
+        var croppedCanvas;
+        var roundedCanvas;
 
         if (!this.croppable) {
-          return
+          return;
         }
-        // Crop
-        croppedCanvas = this.cropper.getCroppedCanvas()
-        console.log(this.cropper)
-        // Round
-        roundedCanvas = this.getRoundedCanvas(croppedCanvas)
+        //Crop
+        croppedCanvas = this.cropper.getCroppedCanvas();
+        console.log(this.cropper);
+        //Round
+        roundedCanvas = this.getRoundedCanvas(croppedCanvas);
 
-        this.headerImage = roundedCanvas.toDataURL()
-        this.postImg()
+        this.headerImage = roundedCanvas.toDataURL();
+        this.postImg();
       },
       getRoundedCanvas (sourceCanvas) {
-        var canvas = document.createElement('canvas')
-        var context = canvas.getContext('2d')
-        var width = sourceCanvas.width
-        var height = sourceCanvas.height
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        var width = sourceCanvas.width;
+        var height = sourceCanvas.height;
 
-        canvas.width = width
-        canvas.height = height
+        canvas.width = width;
+        canvas.height = height;
 
-        context.imageSmoothingEnabled = true
-        context.drawImage(sourceCanvas, 0, 0, width, height)
-        context.globalCompositeOperation = 'destination-in'
-        context.beginPath()
-        context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI, true)
-        context.fill()
+        context.imageSmoothingEnabled = true;
+        context.drawImage(sourceCanvas, 0, 0, width, height);
+        context.globalCompositeOperation = 'destination-in';
+        context.beginPath();
+        context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI, true);
+        context.fill();
 
-        return canvas
+        return canvas;
       },
       postImg () { }
     }
-  }
+  };
 </script>
 
 <style>

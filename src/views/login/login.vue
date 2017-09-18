@@ -31,9 +31,9 @@
 </template>
 
 <script>
-  import { axios } from '@/router/config'
-  import { XInput, Group, XButton, Cell, XSwitch, CheckIcon, Alert } from 'vux'
-  import vheader from '../components/header/singinHeader'
+  import { axios } from '@/router/config';
+  import { XInput, Group, XButton, Cell, XSwitch, CheckIcon, Alert } from 'vux';
+  import vheader from '../../components/header/singinHeader';
   export default {
     components: {
       vheader,
@@ -55,31 +55,31 @@
         title: '',
         content: '',
         demo1: false
-      }
+      };
     },
     methods: {
       getValid1 () {
-        var self = this
+        var self = this;
         return new Promise(function (resolve, reject) {
-          let patt = /^[a-zA-Z0-9]{4,16}$/
-          self.valid1 = patt.test(self.account) ? ' ' : '账号必须是4到16位字母或数字组成'
+          let patt = /^[a-zA-Z0-9]{4,16}$/;
+          self.valid1 = patt.test(self.account) ? ' ' : '账号必须是4到16位字母或数字组成';
           if (self.valid1 === ' ') {
-            resolve()
+            resolve();
           }
-        })
+        });
       },
       getValid4 () {
-        var self = this
+        var self = this;
         return new Promise(function (resolve, reject) {
-          let patt = /^[a-zA-Z0-9]{4,16}$/
-          self.valid4 = patt.test(self.password) ? ' ' : '密码必须是4到16位字母或数字组成'
+          let patt = /^[a-zA-Z0-9]{4,16}$/;
+          self.valid4 = patt.test(self.password) ? ' ' : '密码必须是4到16位字母或数字组成';
           if (self.valid4 === ' ') {
-            resolve()
+            resolve();
           }
-        })
+        });
       },
       login () {
-        let self = this
+        let self = this;
         Promise.all([this.getValid1(), this.getValid4()]).then(function (val) {
           axios('get', '/login',
             {
@@ -87,20 +87,20 @@
               password: self.password
             }, data => {
               if (data.status === 200) {
-                self.$router.push('/')
+                self.$router.push('/');
               } else {
-                self.show2 = true
-               // self.title = '登录失败'
-                self.content = data.message
+                self.show2 = true;
+               //self.title = '登录失败'
+                self.content = data.message;
               }
-            })
-        })
+            });
+        });
       }
     }
-  }
+  };
 </script>
 <style lang="scss" rel="stylesheet/scss">
-  @import "../assets/mixin";
+  @import "../../assets/mixin";
 
   .register {
     display: flex;

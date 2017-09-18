@@ -25,13 +25,13 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navList from '../../components/header/navList'
+  import navList from '../../components/header/navList';
 
   export default {
     data () {
       return {
         active: false
-      }
+      };
     },
     components: {
       navList
@@ -39,10 +39,10 @@
 
     methods: {
       showTab () {
-        this.active = !this.active
+        this.active = !this.active;
       }
     }
-  }
+  };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
