@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="register"  v-if="!username">
     <vheader></vheader>
     <div class="active_main">
       <div class="nickname">尊敬的 {{username}}</div>
@@ -36,8 +36,10 @@
     },
     created () {
       const b = Base64.Base64;
-      this.username = b.decode(this.queryString('a'));
-      this.code = this.queryString('b');
+      if (this.queryString('a')) {
+        this.username = b.decode(this.queryString('a'));
+        this.code = this.queryString('b');
+      }
     },
     methods: {
       queryString (name) {
@@ -53,10 +55,9 @@
           code: self.code
         }, data => {
           if (data.status === 200) {
-            if (data.code === 1) {
-              //已激活
-            } else if (data.code === 2) {
-              //激活成功
+            if (data.code === 1 || data.code === 2) {
+              //已激活 && 激活成功
+              self.$route.push('/login');
             }
           } else {
             self.show2 = true;
