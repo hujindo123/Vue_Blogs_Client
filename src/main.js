@@ -10,6 +10,7 @@ import itemNews from '@/components/index/itemNews';
 
 import register from '@/views/register/register';
 import active from '@/views/register/active';
+import hasActive from '@/views/register/hasActive';
 
 import login from '@/views/login/login';
 import forget from '@/views/login/forgetPassword';
@@ -44,6 +45,10 @@ const routes = [
   {
     path: '/active',
     component: active
+  },
+  {
+    path: '/hasActive',
+    component: hasActive
   },
   {
     path: '/login',
