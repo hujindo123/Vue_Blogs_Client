@@ -2,11 +2,15 @@
   <div id="demo">
     <!-- 遮罩层 -->
     <div class="container" v-show="panel">
-      <div>
-        <img id="image" :src="url" alt="Picture">
-      </div>
+      <form method="post"
+            enctype="multipart/form-data">
+        <div>
+          <img id="image" :src="url" alt="Picture">
+        </div>
 
-      <button type="button" id="button" @click="crop">确定</button>
+        <button type="button" id="button" @click="crop">确定</button>
+      </form>
+
 
     </div>
 
@@ -16,10 +20,10 @@
         </div>
       </div>
       <div style="margin-top:20px;">
-        <input type="file" id="change" accept="image" @change="change">
+        <input type="file" id="change" accept="image"   @change="change">
         <label for="change"></label>
       </div>
-
+      <div id="myDiv"></div>
     </div>
   </div>
 </template>
@@ -58,6 +62,7 @@
         var url = null;
         if (window.createObjectURL !== undefined) { //basic
           url = window.createObjectURL(file);
+          console.log(url);
         } else if (window.URL !== undefined) { //mozilla(firefox)
           url = window.URL.createObjectURL(file);
         } else if (window.webkitURL !== undefined) { //webkit or chrome
@@ -87,12 +92,11 @@
         }
         //Crop
         croppedCanvas = this.cropper.getCroppedCanvas();
-        console.log(this.cropper);
         //Round
         roundedCanvas = this.getRoundedCanvas(croppedCanvas);
 
         this.headerImage = roundedCanvas.toDataURL();
-        this.postImg();
+        this.postImg(this.headerImage);
       },
       getRoundedCanvas (sourceCanvas) {
         var canvas = document.createElement('canvas');
@@ -112,7 +116,20 @@
 
         return canvas;
       },
-      postImg () { }
+      postImg (t) {
+        var pic = t;
+        var url = 'http://upload-z1.qiniup.com'; //非华东空间需要根据注意事项 1 修改上传域名
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            document.getElementById('myDiv').innerHTML = xhr.responseText;
+          }
+        };
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+        xhr.setRequestHeader('Authorization', 'm9BkY1-Tx10lFAtzbu8rlXt3FfC0LHsGSNqaByo6:uo26x2d0Vw3ffYvs9yv3SN_c_FA=:eyJzY29wZSI6Imh1amluZG9uZyIsImRlYWRsaW5lIjoxNTA1ODQwNDI5fQ==');
+        xhr.send(pic);
+      }
     }
   };
 </script>
