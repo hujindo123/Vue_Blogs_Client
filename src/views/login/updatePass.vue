@@ -2,18 +2,19 @@
   <div class="register">
     <vheader></vheader>
     <div class="wrapper_main">
-      <group title="忘记了密码？">
-        <x-input class="yzmInput" placeholder="Email" required @on-change="getValid3" v-model="email"></x-input>
-      </group>
-      <p class="yz">{{valid3}}</p>
+      <div class="desc">
+        <h4>Hi, {{email}}</h4>
+        <p> 请输入您的新密码进行重置操作。</p>
+      </div>
       <group>
-        <div class="yzm">
-          <x-input placeholder="验证码" class="yzmInput" required @on-change="getValid6" v-model="validCode"></x-input>
-          <div class="yzmButtons vux-1px-l" @click="getCaptchas"><img :src="captchas"/></div>
-        </div>
+        <x-input placeholder="密码" required type="password" @on-change="getValid4" v-model="password"></x-input>
       </group>
-      <p class="yz">{{valid6}}</p>
-      <x-button type="primary" class="submit" @click.native="findPass">找回密码</x-button>
+      <p class="yz">{{valid4}}</p>
+      <group>
+        <x-input placeholder="确认密码" required type="password" @on-change="getValid5" v-model="rpwd"></x-input>
+      </group>
+      <p class="yz">{{valid5}}</p>
+      <x-button type="primary" class="submit" @click.native="updatePass">重置密码</x-button>
     </div>
   </div>
 </template>
@@ -31,57 +32,58 @@
     },
     data () {
       return {
-        validCode: '', //验证码
-        captchas: '',
         email: '',
-        valid3: '',
-        valid6: ''
+        password: '',
+        rpwd: '',
+        valid4: '',
+        valid5: ''
       };
     },
     created () {
-      this.getCaptchas();
+      if (this.queryString('a')) {
+        this.email = this.queryString('a');
+      }
     },
     methods: {
-      getValid3 () {
+      queryString (name) {
+        let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+        let r = window.location.search.substr(1).match(reg);
+        if (r !== null) return unescape(r[2]);
+        return null;
+      },
+      getValid4 () {
         var self = this;
         return new Promise(function (resolve, reject) {
-          let patt = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-          self.valid3 = patt.test(self.email) ? ' ' : '请填写有效的Email';
-          if (self.valid3 === ' ') {
+          let patt = /^[a-zA-Z0-9]{4,16}$/;
+          self.valid4 = patt.test(self.password) ? ' ' : '必须是4到16位字母或数字组成';
+          if (self.valid4 === ' ') {
             resolve();
           }
         });
       },
-      getValid6 () {
+      getValid5 () {
         var self = this;
         return new Promise(function (resolve, reject) {
-          self.valid6 = self.validCode ? ' ' : '请填写有效的验证码';
-          if (self.valid6 === ' ') {
+          self.valid5 = self.password === self.rpwd ? ' ' : '密码不一致  ';
+          if (self.valid5 === ' ') {
             resolve();
           }
         });
       },
-      getCaptchas () {
+      updatePass () {
         var self = this;
-        axios('get', '/getCaptchas', {}, data => {
-          if (data.code === 200) {
-            self.captchas = data.data;
-          }
-        });
-      },
-      findPass () {
-        var self = this;
-        Promise.all([this.getValid3(), this.getValid6()]).then(function (val) {
-          axios('get', '/findPass',
+        Promise.all([this.getValid4(), this.getValid5()]).then(function (val) {
+          axios('get', '/updatePass',
             {
               email: self.email,
-              validCode: self.validCode
+              password: self.password,
+              code: self.queryString('b')
             }, data => {
               self.show2 = true;
               if (data.status === 200) {
                 //self.title = '登录失败'
                 self.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';
-                self.$router.push(`/needActive?a=`);
+                self.$router.push(`/login`);
               } else {
                 //self.title = '登录失败'
                 self.content = data.message;
@@ -102,8 +104,17 @@
     position: relative;
     .wrapper_main {
       flex: 1;
+      .desc {
+        padding: 10px;
+        h4 {
+          line-height: 28px;
+        }
+        p {
+          font-size: 14px;
+          line-height: 25px;
+        }
+      }
       .weui-cells {
-        margin-top: 0;
         .yzm {
           display: flex;
           flex-flow: row;
@@ -119,7 +130,6 @@
             text-align: center;
             justify-content: center;
           }
-
         }
         .submit {
           margin-top: 20px;

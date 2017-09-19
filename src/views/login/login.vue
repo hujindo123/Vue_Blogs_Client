@@ -22,9 +22,9 @@
         <cell value-align="left">
           <router-link to="/forget">忘记密码</router-link>
         </cell>
-        <cell value-align="left">
+       <!-- <cell value-align="left">
           <router-link to="/NotEmail">未收到邮件？</router-link>
-        </cell>
+        </cell>-->
       </group>
     </div>
   </div>

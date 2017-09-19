@@ -14,7 +14,7 @@
       </group>
       <p class="yz">{{valid6}}</p>
       <x-button type="primary" class="submit" @click.native="findPass">找回密码</x-button>
-      <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
+      <alert v-model="show2" :content="content" @on-hide="onHide"></alert> <!--:title="title"-->
     </div>
   </div>
 </template>
@@ -81,15 +81,19 @@
               email: self.email,
               validCode: self.validCode
             }, data => {
-              self.show2 = true;
               if (data.status === 200) {
-                self.$router.push(`/updatePass?a=`);
+                console.log('success');
               } else {
                 //self.title = '登录失败'
                 self.content = data.message;
               }
             });
+          self.show2 = true;
+          self.content = '已发送您邮箱';
         });
+      },
+      onHide () {
+        this.$router.push(`/login`);
       }
     }
   };
