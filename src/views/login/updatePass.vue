@@ -14,22 +14,20 @@
       </group>
       <p class="yz">{{valid6}}</p>
       <x-button type="primary" class="submit" @click.native="findPass">找回密码</x-button>
-      <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
     </div>
   </div>
 </template>
 
 <script>
   import { axios } from '@/router/config';
-  import { XInput, Group, XButton, Alert } from 'vux';
+  import { XInput, Group, XButton } from 'vux';
   import vheader from '@/components/header/singinHeader';
   export default {
     components: {
       vheader,
       Group,
       XInput,
-      XButton,
-      Alert
+      XButton
     },
     data () {
       return {
@@ -37,9 +35,7 @@
         captchas: '',
         email: '',
         valid3: '',
-        valid6: '',
-        content: '',
-        show2: false
+        valid6: ''
       };
     },
     created () {
@@ -83,7 +79,9 @@
             }, data => {
               self.show2 = true;
               if (data.status === 200) {
-                self.$router.push(`/updatePass?a=`);
+                //self.title = '登录失败'
+                self.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';
+                self.$router.push(`/needActive?a=`);
               } else {
                 //self.title = '登录失败'
                 self.content = data.message;

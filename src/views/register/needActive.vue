@@ -1,44 +1,49 @@
 <template>
-  <div class="register">
+  <div class="register" v-if="username">
     <vheader></vheader>
     <div class="active_main">
+      <div class="nickname">尊敬的 {{username}}</div>
       <div>
-        Hi,
-
-        感谢您注册七牛云服务。
-        该邮箱已激活，请不要重复操作
-        立即登录
-
+        感谢您使用江湖。
+        <div>
+          请前往填写邮箱验证，来激活您的江湖服务账户
+        </div>
       </div>
-      <button class="submit" @click="active">立即激活</button>
+      <group>
+        <Cell :title="'未收到邮件，重新发送邮件'" @click.native="updateEmailCode"></Cell>
+      </group>
     </div>
     <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import { Group, Cell, Alert } from 'vux';
   import { axios } from '@/router/config';
   import vheader from '@/components/header/singinHeader';
-  import { Alert } from 'vux';
   import Base64 from 'js-base64';
   export default {
     components: {
       vheader,
+      Group,
+      Cell,
       Alert
     },
     data () {
       return {
-        href: '',
         username: '',
         code: '',
         show2: false,
-        content: ''
+        content: '',
+        block: false
       };
     },
     created () {
       const b = Base64.Base64;
-      this.username = b.decode(this.queryString('a'));
-      this.code = this.queryString('b');
+      if (this.queryString('a')) {
+        this.username = b.decode(this.queryString('a'));
+        this.code = this.queryString('b');
+      }
     },
     methods: {
       queryString (name) {
@@ -47,23 +52,24 @@
         if (r !== null) return unescape(r[2]);
         return null;
       },
-      active () {
+      updateEmailCode () {
         var self = this;
-        axios('get', '/actives', {
-          account: self.username,
-          code: self.code
-        }, data => {
-          if (data.status === 200) {
-            if (data.code === 1) {
-              //已激活
-            } else if (data.code === 2) {
-              //激活成功
-            }
-          } else {
+        if (!self.block) {
+          axios('get', '/updateEmailCode', {
+            account: self.username
+          }, data => {
             self.show2 = true;
-            self.content = data.message;
-          }
-        });
+            if (data.status === 200) {
+              self.content = '发送成功，请到填写的邮箱激活，即可立即登陆';
+            } else {
+              self.content = data.message;
+            }
+          });
+        }
+        self.block = true;
+        setTimeout(() => {
+          self.block = false;
+        }, 5000);
       }
     }
   };

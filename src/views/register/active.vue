@@ -1,5 +1,5 @@
 <template>
-  <div class="register"  v-if="!username">
+  <div class="register" v-if="username">
     <vheader></vheader>
     <div class="active_main">
       <div class="nickname">尊敬的 {{username}}</div>
@@ -19,7 +19,6 @@
   import { axios } from '@/router/config';
   import vheader from '@/components/header/singinHeader';
   import { Alert } from 'vux';
-  import Base64 from 'js-base64';
   export default {
     components: {
       vheader,
@@ -27,7 +26,6 @@
     },
     data () {
       return {
-        href: '',
         username: '',
         code: '',
         show2: false,
@@ -35,9 +33,8 @@
       };
     },
     created () {
-      const b = Base64.Base64;
       if (this.queryString('a')) {
-        this.username = b.decode(this.queryString('a'));
+        this.username = this.queryString('a');
         this.code = this.queryString('b');
       }
     },
@@ -57,7 +54,7 @@
           if (data.status === 200) {
             if (data.code === 1 || data.code === 2) {
               //已激活 && 激活成功
-              self.$route.push('/login');
+              self.$router.push('/hasActive');
             }
           } else {
             self.show2 = true;

@@ -11,9 +11,11 @@ import itemNews from '@/components/index/itemNews';
 import register from '@/views/register/register';
 import active from '@/views/register/active';
 import hasActive from '@/views/register/hasActive';
+import needActive from '@/views/register/needActive';
 
 import login from '@/views/login/login';
 import forget from '@/views/login/forgetPassword';
+import updatePass from '@/views/login/updatePass';
 import NotEmail from '@/views/login/notAvailableEmail';
 import article from '@/views/article';
 
@@ -51,12 +53,20 @@ const routes = [
     component: hasActive
   },
   {
+    path: '/needActive',
+    component: needActive
+  },
+  {
     path: '/login',
     component: login
   },
   {
     path: '/forget',
     component: forget
+  },
+  {
+    path: '/updatePass',
+    component: updatePass
   },
   {
     path: '/NotEmail',

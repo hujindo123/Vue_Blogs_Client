@@ -157,7 +157,7 @@
               if (data.status === 200) {
                 //self.title = '登录失败'
                 self.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';
-                self.$router.push(`/active?a=${b.encode(data.data.account)}&b=${data.data.randomString}`);
+                self.$router.push(`/needActive?a=${b.encode(data.data.account)}`);
               } else {
                 //self.title = '登录失败'
                 self.content = data.message;
