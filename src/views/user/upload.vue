@@ -2,35 +2,26 @@
   <div id="demo">
     <!-- 遮罩层 -->
     <div class="container" v-show="panel">
-      <form method="post"
-            enctype="multipart/form-data">
-        <div>
-          <img id="image" :src="url" alt="Picture">
-        </div>
-
-        <button type="button" id="button" @click="crop">确定</button>
-      </form>
-
-
+      <div>
+        <img id="image" :src="url" alt="Picture">
+      </div>
+      <button type="button" id="button" @click="crop">确定</button>
     </div>
-
     <div style="padding:20px;">
       <div class="show">
         <div class="picture" :style="'backgroundImage:url('+headerImage+')'">
         </div>
       </div>
-      <div style="margin-top:20px;">
-        <input type="file" id="change" accept="image"   @change="change">
-        <label for="change"></label>
+      <div >
+        <input type="file" id="change" name="file" accept="image/png,image/gif,image/jpeg" @change="change">
       </div>
-      <div id="myDiv"></div>
     </div>
   </div>
 </template>
 
 <script>
+  import axios from 'axios';
   import Cropper from 'cropperjs';
-
   export default {
     components: {},
     data () {
@@ -117,18 +108,23 @@
         return canvas;
       },
       postImg (t) {
-        var pic = t;
+        var pic = t.split(',')[1];
         var url = 'http://upload-z1.qiniup.com'; //非华东空间需要根据注意事项 1 修改上传域名
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-            document.getElementById('myDiv').innerHTML = xhr.responseText;
-          }
-        };
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-        xhr.setRequestHeader('Authorization', 'm9BkY1-Tx10lFAtzbu8rlXt3FfC0LHsGSNqaByo6:uo26x2d0Vw3ffYvs9yv3SN_c_FA=:eyJzY29wZSI6Imh1amluZG9uZyIsImRlYWRsaW5lIjoxNTA1ODQwNDI5fQ==');
-        xhr.send(pic);
+        var token = 'm9BkY1-Tx10lFAtzbu8rlXt3FfC0LHsGSNqaByo6:v7t1ADLC5VxEluN3ywh7SHKJufk=:eyJzY29wZSI6Imh1amluZG9uZyIsImRlYWRsaW5lIjoxNTA1ODg5NTgwfQ==';
+        let param = new FormData(); //创建form对象
+
+        param.append('file', pic);//通过append向form对象添加数据
+        param.append('token', token);//添加form表单中其他数据
+        console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+        let config = {
+          headers: {'Content-Type': 'multipart/form-data'}
+        };  //添加请求头
+        console.log(this.axios);
+
+        axios.post(url, param, config)
+          .then(response => {
+            console.log(response.data);
+          });
       }
     }
   };
