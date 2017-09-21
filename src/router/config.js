@@ -8,12 +8,12 @@ import Axios from 'axios';
 import qs from 'qs';
 const ajax = Axios.create({
   //baseURL: 'http://47.93.236.234:3000'
-  baseURL: 'http://172.16.0.61:3001'
+  baseURL: 'http://192.168.0.100:3001'
 });
 ajax.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 ajax.defaults.withCredentials = true;
 const axios = (method, path, data, callback) => {
-  data['token'] = sessionStorage.getItem('token');
+  //data['token'] = sessionStorage.getItem('token');
   if (method === 'get') {
     ajax.get(path, {
       params: data
@@ -28,7 +28,7 @@ const axios = (method, path, data, callback) => {
       console.log(error);
     });
   } else if (method === 'post') {
-    ajax.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+    ajax.defaults.headers['Content-Type'] = 'multipart/form-data;charset=utf-8';
     ajax.post(path, qs.stringify(data)).then((response) => {
       if (response.data.code === -400) {
         alert(response.data.message);

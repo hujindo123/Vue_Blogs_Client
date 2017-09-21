@@ -54,7 +54,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { axios } from '@/router/config';
+  import axios from 'axios';
   import Cropper from 'cropperjs';
   import {
     Scroller,
@@ -179,10 +179,15 @@
          xhr.setRequestHeader('Content-Type', 'multipart/form-data');
          xhr.setRequestHeader('Authorization', 'UpToken ' + token);
          xhr.send(pic);*/
-        axios('get', '/updateImg', {
-          pic: pic
-        }, data => {
-          debugger;
+        //ajaxs.defaults.headers['Content-Type'] = 'multipart/form-data;charset=utf-8';
+        let config = {
+          headers: {'Content-Type': 'multipart/form-data'}
+        };
+        var formData = new FormData();
+        formData.append('file', pic);
+        console.log(formData.get('file'));
+        axios.post('http://192.168.0.100:3001/updateImg', formData, config).then(response => {
+          console.log(response);
         });
       },
       back () {
