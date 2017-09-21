@@ -54,7 +54,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import axios from 'axios';
+  import { axios } from '@/router/config';
   import Cropper from 'cropperjs';
   import {
     Scroller,
@@ -105,6 +105,7 @@
       });
     },
     methods: {
+      /*图片*/
       getObjectURL (file) {
         var url = null;
         if (window.createObjectURL !== undefined) { //basic
@@ -163,24 +164,26 @@
 
         return canvas;
       },
+      /*图片-end*/
       postImg (t) {
         var pic = t.split(',')[1];
-        var url = 'http://upload-z1.qiniup.com'; //非华东空间需要根据注意事项 1 修改上传域名
-        var token = 'm9BkY1-Tx10lFAtzbu8rlXt3FfC0LHsGSNqaByo6:v7t1ADLC5VxEluN3ywh7SHKJufk=:eyJzY29wZSI6Imh1amluZG9uZyIsImRlYWRsaW5lIjoxNTA1ODg5NTgwfQ==';
-        let param = new FormData(); //创建form对象
-
-        param.append('file', pic);//通过append向form对象添加数据
-        param.append('token', token);//添加form表单中其他数据
-        console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
-        let config = {
-          headers: {'Content-Type': 'multipart/form-data'}
-        };  //添加请求头
-        console.log(this.axios);
-
-        axios.post(url, param, config)
-          .then(response => {
-            console.log(response.data);
-          });
+        /*var url = 'http://upload-z1.qiniup.com/putb64/-1'; //非华东空间需要根据注意事项 1 修改上传域名
+         var token = 'm9BkY1-Tx10lFAtzbu8rlXt3FfC0LHsGSNqaByo6:rmk6_Tb43grdO6qncKLvruizL8Q=:eyJzY29wZSI6Imh1amluZG9uZyIsImRlYWRsaW5lIjoxNTA1OTY2MTMzfQ==';
+         var xhr = new XMLHttpRequest();
+         xhr.onreadystatechange = function () {
+         if (xhr.readyState === 4) {
+         console.log(xhr.responseText);
+         }
+         };
+         xhr.open('POST', url, true);
+         xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+         xhr.setRequestHeader('Authorization', 'UpToken ' + token);
+         xhr.send(pic);*/
+        axios('get', '/updateImg', {
+          pic: pic
+        }, data => {
+          debugger;
+        });
       },
       back () {
         this.$router.go(-1);
@@ -272,7 +275,7 @@
           background-repeat: no-repeat;
           background-size: cover;
         }
-        #change{
+        #change {
           width: 100px;
           height: 100px;
           position: absolute;
