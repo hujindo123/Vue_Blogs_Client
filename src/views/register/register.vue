@@ -38,7 +38,6 @@
 
 <script>
   import { axios } from '@/router/config';
-  import Base64 from 'js-base64';
   import { XInput, Group, XButton, Cell, CheckIcon, Alert } from 'vux';
   import vheader from '@/components/header/singinHeader';
   export default {
@@ -142,7 +141,6 @@
         });
       },
       submit () {
-        const b = Base64.Base64;
         let self = this;
         Promise.all([this.getValid1(), this.getValid2(), this.getValid3(), this.getValid4(), this.getValid5(), this.getValid6()]).then(function (val) {
           axios('get', '/register',
@@ -157,7 +155,7 @@
               if (data.status === 200) {
                 //self.title = '登录失败'
                 self.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';
-                self.$router.push(`/needActive?a=${b.encode(data.data.account)}`);
+                self.$router.push(`/needActive?a=${data.data.account}`);
               } else {
                 //self.title = '登录失败'
                 self.content = data.message;

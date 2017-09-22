@@ -10,7 +10,7 @@
         <x-input placeholder="密码" required type="password" v-model="password" @on-change="getValid4"></x-input>
       </group>
       <p class="yz">{{valid4}}</p>
-      <alert v-model="show2"  :content="content"></alert> <!--:title="title"-->
+      <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
       <div class="login_state">
         <x-switch title="记住登录状态（60天）" v-model="demo1"></x-switch>
       </div>
@@ -22,9 +22,9 @@
         <cell value-align="left">
           <router-link to="/forget">忘记密码</router-link>
         </cell>
-       <!-- <cell value-align="left">
-          <router-link to="/NotEmail">未收到邮件？</router-link>
-        </cell>-->
+        <!-- <cell value-align="left">
+           <router-link to="/NotEmail">未收到邮件？</router-link>
+         </cell>-->
       </group>
     </div>
   </div>
@@ -88,9 +88,11 @@
             }, data => {
               if (data.status === 200) {
                 self.$router.push('/');
+              } else if (data.status === 1) {
+                self.$router.push(`/needActive?a=${data.account}`);
               } else {
                 self.show2 = true;
-               //self.title = '登录失败'
+                //self.title = '登录失败'
                 self.content = data.message;
               }
             });

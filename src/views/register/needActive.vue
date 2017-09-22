@@ -6,7 +6,7 @@
       <div>
         感谢您使用江湖。
         <div>
-          请前往填写邮箱验证，来激活您的江湖服务账户
+          请前往邮箱验证，来激活您的江湖服务账户
         </div>
       </div>
       <group>
@@ -21,7 +21,6 @@
   import { Group, Cell, Alert } from 'vux';
   import { axios } from '@/router/config';
   import vheader from '@/components/header/singinHeader';
-  import Base64 from 'js-base64';
   export default {
     components: {
       vheader,
@@ -39,9 +38,8 @@
       };
     },
     created () {
-      const b = Base64.Base64;
       if (this.queryString('a')) {
-        this.username = b.decode(this.queryString('a'));
+        this.username = this.queryString('a');
         this.code = this.queryString('b');
       }
     },

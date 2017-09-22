@@ -166,27 +166,13 @@
       },
       /*图片-end*/
       postImg (t) {
-        var pic = t.split(',')[1];
-        /*var url = 'http://upload-z1.qiniup.com/putb64/-1'; //非华东空间需要根据注意事项 1 修改上传域名
-         var token = 'm9BkY1-Tx10lFAtzbu8rlXt3FfC0LHsGSNqaByo6:rmk6_Tb43grdO6qncKLvruizL8Q=:eyJzY29wZSI6Imh1amluZG9uZyIsImRlYWRsaW5lIjoxNTA1OTY2MTMzfQ==';
-         var xhr = new XMLHttpRequest();
-         xhr.onreadystatechange = function () {
-         if (xhr.readyState === 4) {
-         console.log(xhr.responseText);
-         }
-         };
-         xhr.open('POST', url, true);
-         xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-         xhr.setRequestHeader('Authorization', 'UpToken ' + token);
-         xhr.send(pic);*/
-        //ajaxs.defaults.headers['Content-Type'] = 'multipart/form-data;charset=utf-8';
+        let pic = t.split(',')[1];
         let config = {
           headers: {'Content-Type': 'multipart/form-data'}
         };
-        var formData = new FormData();
+        let formData = new FormData();
         formData.append('file', pic);
-        console.log(formData.get('file'));
-        axios.post('http://192.168.0.100:3001/updateImg', formData, config).then(response => {
+        axios.post('/updateImg', formData, config).then(response => {
           console.log(response);
         });
       },
