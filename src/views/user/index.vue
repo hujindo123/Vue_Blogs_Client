@@ -54,7 +54,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import axios from 'axios';
+  import { axios } from '@/router/config';
   import Cropper from 'cropperjs';
   import {
     Scroller,
@@ -92,9 +92,9 @@
     },
     mounted () {
       //初始化这个裁剪框
-      var self = this;
-      var image = document.getElementById('image');
-      this.cropper = new Cropper(image, {
+      let self = this;
+      let image = document.getElementById('image');
+      self.cropper = new Cropper(image, {
         aspectRatio: 1,
         viewMode: 1,
         background: false,
@@ -103,6 +103,7 @@
           self.croppable = true;
         }
       });
+      self.getUserMessage();
     },
     methods: {
       /*图片*/
@@ -167,14 +168,15 @@
       /*图片-end*/
       postImg (t) {
         let pic = t.split(',')[1];
-        let config = {
-          headers: {'Content-Type': 'multipart/form-data'}
-        };
+        /*let config = {
+         headers: {'Content-Type': 'multipart/form-data'}
+         };*/
         let formData = new FormData();
         formData.append('file', pic);
-        axios.post('/updateImg', formData, config).then(response => {
-          console.log(response);
-        });
+        axios('put', '/updateImg', formData, data => {});
+      },
+      getUserMessage () {
+        axios('get', '/getUserMessage', {}, data => {});
       },
       back () {
         this.$router.go(-1);

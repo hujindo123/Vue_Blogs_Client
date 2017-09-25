@@ -14,7 +14,7 @@
       <div class="login_state">
         <x-switch title="记住登录状态（60天）" v-model="demo1"></x-switch>
       </div>
-      <x-button type="primary" class="submit" @click.native="login">登录</x-button>
+      <x-button type="primary" class="submit" @click.native="login" action-type="button">登录</x-button>
       <group class="login_more">
         <cell value-align="left">
           <router-link to="/register">注册</router-link>
@@ -87,6 +87,7 @@
               password: self.password
             }, data => {
               if (data.status === 200) {
+                sessionStorage.setItem('userId', data.data.userId);
                 self.$router.push('/');
               } else if (data.status === 1) {
                 self.$router.push(`/needActive?a=${data.account}`);

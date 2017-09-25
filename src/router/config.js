@@ -10,16 +10,15 @@ const ajax = Axios.create({
   //baseURL: 'http://47.93.236.234:3000'
   baseURL: 'http://172.16.0.61:3001'
 });
-ajax.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 ajax.defaults.withCredentials = true;
 const axios = (method, path, data, callback) => {
-  //data['token'] = sessionStorage.getItem('token');
+  data['userId'] = sessionStorage.getItem('userId');
   if (method === 'get') {
     ajax.get(path, {
       params: data
     }).then((response) => {
-      if (response.data.code === -400) {
-        console.log(response.data.message);
+      if (response.data.status === -1) {
+        alert(response.data.message);
         window.location.href = '/login';
       } else {
         callback(response.data);
@@ -28,8 +27,9 @@ const axios = (method, path, data, callback) => {
       console.log(error);
     });
   } else if (method === 'post') {
+    ajax.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
     ajax.post(path, qs.stringify(data)).then((response) => {
-      if (response.data.code === -400) {
+      if (response.data.status === -1) {
         alert(response.data.message);
         window.location.href = '/login';
       } else {
@@ -41,7 +41,7 @@ const axios = (method, path, data, callback) => {
   } else if (method === 'put') {
     ajax.defaults.headers.post['Content-Type'] = 'multipart/form-data';
     ajax.post(path, data).then((response) => {
-      if (response.data.code === -400) {
+      if (response.data.status === -1) {
         alert(response.data.message);
         window.location.href = '/login';
       } else {
