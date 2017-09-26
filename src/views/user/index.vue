@@ -4,7 +4,7 @@
       <img id="image" :src="url" alt="Picture">
       <button type="button" id="button" @click="crop">确定</button>
     </div>
-    <scroller lock-x ref="scrollerBottom">
+    <scroller lock-x ref="scrollerBottom" v-if="message">
       <div class="user_message">
         <blur :blur-amount=20 :url="url">
           <i class="iconfont icon-fanhui-" @click="back"></i>
@@ -14,6 +14,9 @@
               <div class="picture" v-if="!headerImage" :style="'backgroundImage:url('+url+')'"></div>
               <input type="file" id="change" name="file" accept="image/png,image/gif,image/jpeg" @change="change">
             </div>
+            <div class="desc"><span class="nickname">{{message.nickname}}</span><i class="iconfont icon-xingbie-nv"></i>
+            </div>
+            <div class="bjxx" @click="show = true"><i class="iconfont icon-xiugai"></i> 编辑信息</div>
           </div>
         </blur>
         <flexbox :gutter="0">
@@ -21,41 +24,31 @@
             <img :src="img" style="width:100%" @click="url = img"/>
           </flexbox-item>
         </flexbox>
-        <group title="性别">
-          <checker v-model="demo1" default-item-class="user-sex-item" class="user-sex-item"
-                   selected-item-class="user-sex-item-selected">
-            <checker-item value="1" class="sex">{{ '男'}}</checker-item>
-            <checker-item value="2" class="sex">{{ '女'}}</checker-item>
-          </checker>
+        <group>
+          <x-input title="出生日期" :value="message.data > 0 ? message.data : '2017-02-28'" text-align="right"
+                   readonly="readonly">111
+          </x-input>
         </group>
         <group>
-          <x-input placeholder="名字"></x-input>
+          <x-input title="Email" :value="message.email" text-align="right" readonly="readonly"></x-input>
         </group>
         <group>
-          <datetime v-model="value" @on-change="change" :title="'生日'"></datetime>
-        </group>
-        <group>
-          <x-input placeholder="email"></x-input>
-        </group>
-        <group>
-          <x-address :title="'地址'" v-model="address" :list="ChinaAddressV3Data" placeholder="请选择地址">
-            <template slot="title" scope="props">
-        <span :class="props.labelClass" :style="props.labelStyle" style="height:24px;">
-          <span style="vertical-align:middle;">地址</span>
-        </span>
-            </template>
-          </x-address>
+          <x-input title="地址" :value="message.address>0 ? message.address : address" text-align="right"
+                   readonly="readonly"></x-input>
         </group>
       </div>
     </scroller>
+    <update v-show="show" :message="message"></update>
   </div>
 
 
 </template>
 
 <script type="text/ecmascript-6">
+  const ERROR_OK = 200;
   import { axios } from '@/router/config';
   import Cropper from 'cropperjs';
+  import update from '@/components/user/updateMessage';
   import {
     Scroller,
     Flexbox,
@@ -79,15 +72,15 @@
           'https://o3e85j0cv.qnssl.com/hot-chocolate-1068703__340.jpg'
         ],
         url: 'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
-        value: '2017-01-15',
         ChinaAddressV3Data: ChinaAddressV3Data,
-        address: [],
-        demo1: '',
+        message: {},
         headerImage: '',
+        address: '北京市 市辖区 东城区', //北京市东城区'
         picValue: '',
         cropper: '',
         croppable: false,
-        panel: false
+        panel: false,
+        show: false
       };
     },
     mounted () {
@@ -176,7 +169,12 @@
         axios('put', '/updateImg', formData, data => {});
       },
       getUserMessage () {
-        axios('get', '/getUserMessage', {}, data => {});
+        var self = this;
+        axios('get', '/getUserMessage', {}, data => {
+          if (data.status === ERROR_OK) {
+            self.message = data.data;
+          }
+        });
       },
       back () {
         this.$router.go(-1);
@@ -194,7 +192,8 @@
       XButton,
       Datetime,
       XAddress,
-      ChinaAddressV3Data
+      ChinaAddressV3Data,
+      update
     }
   };
 </script>
@@ -235,9 +234,8 @@
   .user_message {
     @include wh(100%, 100%);
     box-sizing: border-box;
-    padding-bottom: 150px;
     overflow: hidden;
-    .iconfont {
+    .icon-fanhui- {
       position: absolute;
       padding: 10px;
       top: 0;
@@ -277,9 +275,32 @@
           opacity: 0;
         }
       }
+      .desc {
+        font-size: 15px;
+        margin-top: 5px;
+        .nickname {
+          margin-right: 10px;
+        }
+        .icon-xingbie-nan {
+          color: #1296db;
+        }
+        .icon-xingbie-nv {
+          color: #d4237a;
+        }
+      }
+      .bjxx {
+        margin: 8px auto 0;
+        width: 80px;
+        padding: 3px;
+        border: 1px solid #c7c7c7;
+        border-radius: 15px;
+        font-size: 12px;
+      }
 
     }
-
+    input {
+      color: #999;
+    }
     .user-sex-item {
       border: 1px solid #ececec;
       padding: 5px 15px;
