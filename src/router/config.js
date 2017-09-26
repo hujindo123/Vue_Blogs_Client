@@ -8,7 +8,7 @@ import Axios from 'axios';
 import qs from 'qs';
 const ajax = Axios.create({
   //baseURL: 'http://47.93.236.234:3000'
-  baseURL: 'http://172.16.0.61:3001'
+  baseURL: 'http://192.168.0.104:3001'
 });
 ajax.defaults.withCredentials = true;
 const axios = (method, path, data, callback) => {

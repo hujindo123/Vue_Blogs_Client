@@ -27,7 +27,6 @@
     </group>
     <x-button type="primary" class="submit" @click.native="login" action-type="button">保存</x-button>
     <x-button type="default" class="submit" @click.native="login" action-type="button">返回</x-button>
-
   </div>
 </template>
 
@@ -49,8 +48,8 @@
       return {
         nickname: '',
         date: '2017-02-28',
-        sex: 1,
-        address: ['110000', '110100', '110101'], //北京市东城区
+        sex: '',
+        address: [], //北京市东城区
         ChinaAddressV3Data: ChinaAddressV3Data,
         style: {
           'z-index': 2000
@@ -127,7 +126,6 @@
         background-size: contain;
       }
     }
-
     .submit {
       box-sizing: border-box;
       display: inline-block;
@@ -135,6 +133,10 @@
       width: 40%;
       margin-top: 40px;
       margin-bottom: 20px;
+      &.weui-btn_default:not(.weui-btn_disabled):active {
+        color: #535353;
+        background-color: #eaeaea;
+      }
     }
   }
 </style>

@@ -14,7 +14,10 @@
               <div class="picture" v-if="!headerImage" :style="'backgroundImage:url('+url+')'"></div>
               <input type="file" id="change" name="file" accept="image/png,image/gif,image/jpeg" @change="change">
             </div>
-            <div class="desc"><span class="nickname">{{message.nickname}}</span><i class="iconfont icon-xingbie-nv"></i>
+            <div class="desc">
+              <span class="nickname">{{message.nickname}}</span>
+              <i class="iconfont icon-xingbie-nv" v-if="message.sex==0"></i>
+              <i class="iconfont icon-xingbie-nan" v-if="message.sex==1"></i>
             </div>
             <div class="bjxx" @click="show = true"><i class="iconfont icon-xiugai"></i> 编辑信息</div>
           </div>
@@ -25,16 +28,14 @@
           </flexbox-item>
         </flexbox>
         <group>
-          <x-input title="出生日期" :value="message.data > 0 ? message.data : '2017-02-28'" text-align="right"
-                   readonly="readonly">111
+          <x-input title="出生日期" :value="message.birthday" text-align="right" readonly="readonly">
           </x-input>
         </group>
         <group>
           <x-input title="Email" :value="message.email" text-align="right" readonly="readonly"></x-input>
         </group>
         <group>
-          <x-input title="地址" :value="message.address>0 ? message.address : address" text-align="right"
-                   readonly="readonly"></x-input>
+          <x-address :title="'地址'" :value="message.area" :list="ChinaAddressV3Data"></x-address>
         </group>
       </div>
     </scroller>
@@ -75,7 +76,7 @@
         ChinaAddressV3Data: ChinaAddressV3Data,
         message: {},
         headerImage: '',
-        address: '北京市 市辖区 东城区', //北京市东城区'
+        address: '', //北京市东城区'
         picValue: '',
         cropper: '',
         croppable: false,
@@ -278,14 +279,14 @@
       .desc {
         font-size: 15px;
         margin-top: 5px;
-        .nickname {
-          margin-right: 10px;
-        }
-        .icon-xingbie-nan {
-          color: #1296db;
-        }
-        .icon-xingbie-nv {
-          color: #d4237a;
+        .iconfont{
+          margin-left: 10px;
+          &.icon-xingbie-nan {
+            color: #1296db;
+          }
+          &.icon-xingbie-nv {
+            color: #d4237a;
+          }
         }
       }
       .bjxx {
