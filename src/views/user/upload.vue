@@ -12,7 +12,7 @@
         <div class="picture" :style="'backgroundImage:url('+headerImage+')'">
         </div>
       </div>
-      <div >
+      <div>
         <input type="file" id="change" name="file" accept="image/png,image/gif,image/jpeg" @change="change">
       </div>
     </div>
@@ -110,12 +110,11 @@
       postImg (t) {
         var pic = t.split(',')[1];
         var url = 'http://upload-z1.qiniup.com'; //非华东空间需要根据注意事项 1 修改上传域名
-        var token = 'm9BkY1-Tx10lFAtzbu8rlXt3FfC0LHsGSNqaByo6:v7t1ADLC5VxEluN3ywh7SHKJufk=:eyJzY29wZSI6Imh1amluZG9uZyIsImRlYWRsaW5lIjoxNTA1ODg5NTgwfQ==';
         let param = new FormData(); //创建form对象
 
         param.append('file', pic);//通过append向form对象添加数据
-        param.append('token', token);//添加form表单中其他数据
-        console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+        param.append('userId', sessionStorage.getItem('userId'));
+        console.log('userId' + param.get('userId')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         let config = {
           headers: {'Content-Type': 'multipart/form-data'}
         };  //添加请求头

@@ -20,6 +20,7 @@ import NotEmail from '@/views/login/notAvailableEmail';
 import article from '@/views/article';
 
 import user from '@/views/user/index';
+import updateMessage from '@/views/user/updateMessage';
 import upload from '@/views/user/upload';
 
 Vue.use(VueRouter);
@@ -79,6 +80,10 @@ const routes = [
   {
     path: '/user',
     component: user
+  },
+  {
+    path: '/updateMessage',
+    component: updateMessage
   },
   {
     path: '/upload',

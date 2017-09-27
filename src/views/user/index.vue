@@ -19,7 +19,9 @@
               <i class="iconfont icon-xingbie-nv" v-if="message.sex==0"></i>
               <i class="iconfont icon-xingbie-nan" v-if="message.sex==1"></i>
             </div>
-            <div class="bjxx" @click="show = true"><i class="iconfont icon-xiugai"></i> 编辑信息</div>
+            <router-link to="/updateMessage">
+              <div class="bjxx" @click="show = true"><i class="iconfont icon-xiugai"></i> 编辑信息</div>
+            </router-link>
           </div>
         </blur>
         <flexbox :gutter="0">
@@ -35,11 +37,10 @@
           <x-input title="Email" :value="message.email" text-align="right" readonly="readonly"></x-input>
         </group>
         <group>
-          <x-address :title="'地址'" :value="message.area" :list="ChinaAddressV3Data"></x-address>
+          <x-input title="地址" :value="address" text-align="right" readonly="readonly"></x-input>
         </group>
       </div>
     </scroller>
-    <update v-show="show" :message="message"></update>
   </div>
 
 
@@ -49,7 +50,6 @@
   const ERROR_OK = 200;
   import { axios } from '@/router/config';
   import Cropper from 'cropperjs';
-  import update from '@/components/user/updateMessage';
   import {
     Scroller,
     Flexbox,
@@ -75,14 +75,28 @@
         url: 'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
         ChinaAddressV3Data: ChinaAddressV3Data,
         message: {},
+        address: '',
         headerImage: '',
-        address: '', //北京市东城区'
         picValue: '',
         cropper: '',
         croppable: false,
         panel: false,
         show: false
       };
+    },
+    components: {
+      Scroller,
+      Blur,
+      Flexbox,
+      FlexboxItem,
+      Group,
+      Checker,
+      CheckerItem,
+      XInput,
+      XButton,
+      Datetime,
+      XAddress,
+      ChinaAddressV3Data
     },
     mounted () {
       //初始化这个裁剪框
@@ -167,6 +181,8 @@
          };*/
         let formData = new FormData();
         formData.append('file', pic);
+        formData.append('userId', sessionStorage.getItem('userId'));
+        //console.log('userId' + formData.get('userId')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         axios('put', '/updateImg', formData, data => {});
       },
       getUserMessage () {
@@ -174,27 +190,13 @@
         axios('get', '/getUserMessage', {}, data => {
           if (data.status === ERROR_OK) {
             self.message = data.data;
+            self.address = `${self.message.province} ${self.message.city} ${self.message.area}`;
           }
         });
       },
       back () {
         this.$router.go(-1);
       }
-    },
-    components: {
-      Scroller,
-      Blur,
-      Flexbox,
-      FlexboxItem,
-      Group,
-      Checker,
-      CheckerItem,
-      XInput,
-      XButton,
-      Datetime,
-      XAddress,
-      ChinaAddressV3Data,
-      update
     }
   };
 </script>
@@ -279,7 +281,7 @@
       .desc {
         font-size: 15px;
         margin-top: 5px;
-        .iconfont{
+        .iconfont {
           margin-left: 10px;
           &.icon-xingbie-nan {
             color: #1296db;
@@ -296,6 +298,7 @@
         border: 1px solid #c7c7c7;
         border-radius: 15px;
         font-size: 12px;
+        color: #fff;
       }
 
     }
