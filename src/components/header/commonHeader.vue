@@ -5,7 +5,8 @@
         <div class="title">咚咚</div>
         <div class="user">
           <router-link to="/user">
-            <i class="iconfont  icon-yonghu"></i>
+            <i class="iconfont  icon-yonghu" v-if="!header"></i>
+            <i class="iconfont" v-if="header"><img :src="QiNiu+header" alt=""></i>
           </router-link>
         </div>
       </div>
@@ -30,13 +31,16 @@
   export default {
     data () {
       return {
-        active: false
+        active: false,
+        header: ''
       };
     },
     components: {
       navList
     },
-
+    created () {
+      this.header = sessionStorage.getItem('header');
+    },
     methods: {
       showTab () {
         this.active = !this.active;
@@ -70,11 +74,12 @@
           letter-spacing: 5px;
         }
         .user {
+          @include wh(30px, 30px);
           position: absolute;
           right: 13px;
           top: 50%;
           transform: translateY(-50%);
-          .icon-yonghu {
+          .icon-yonghu, img {
             @include wh(30px, 30px);
             @include csh(#fff, 25px, 30px);
           }

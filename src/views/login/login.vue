@@ -88,6 +88,7 @@
             }, data => {
               if (data.status === 200) {
                 sessionStorage.setItem('userId', data.data.userId);
+                sessionStorage.setItem('header', data.data.header);
                 self.$router.push('/');
               } else if (data.status === 1) {
                 self.$router.push(`/needActive?a=${data.account}`);

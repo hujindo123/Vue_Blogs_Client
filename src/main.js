@@ -4,6 +4,9 @@ import Vue from 'vue';
 import FastClick from 'fastclick';
 import VueRouter from 'vue-router';
 import App from './App';
+
+import { axios, QiNiu } from '@/router/config';
+
 import Home from '@/views/index';
 import itemGame from '@/components/index/itemGame';
 import itemNews from '@/components/index/itemNews';
@@ -23,6 +26,8 @@ import user from '@/views/user/index';
 import updateMessage from '@/views/user/updateMessage';
 import upload from '@/views/user/upload';
 
+Vue.prototype.QiNiu = QiNiu;
+Vue.prototype.axios = axios;
 Vue.use(VueRouter);
 
 const routes = [

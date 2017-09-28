@@ -6,12 +6,12 @@
     </div>
     <scroller lock-x ref="scrollerBottom" v-if="message">
       <div class="user_message">
-        <blur :blur-amount=20 :url="url">
+        <blur :blur-amount=20 @click.nactive="changgeBackground" :url="headerImage?headerImage:url">
           <i class="iconfont icon-fanhui-" @click="back"></i>
           <div class="center">
             <div class="header_btton">
-              <div class="picture" v-if="headerImage" :style="'backgroundImage:url('+headerImage+')'"></div>
-              <div class="picture" v-if="!headerImage" :style="'backgroundImage:url('+url+')'"></div>
+              <div class="picture"
+                   :style="headerImage?'backgroundImage:url('+headerImage+')':'backgroundImage:url('+url+')'"></div>
               <input type="file" id="change" name="file" accept="image/png,image/gif,image/jpeg" @change="change">
             </div>
             <div class="desc">
@@ -24,11 +24,11 @@
             </router-link>
           </div>
         </blur>
-        <flexbox :gutter="0">
-          <flexbox-item v-for="(img, index) in images" :key="index">
-            <img :src="img" style="width:100%" @click="url = img"/>
-          </flexbox-item>
-        </flexbox>
+        <!--  <flexbox :gutter="0">
+            <flexbox-item v-for="(img, index) in images" :key="index">
+              <img :src="img" style="width:100%" @click="url = img"/>
+            </flexbox-item>
+          </flexbox>-->
         <group>
           <x-input title="出生日期" :value="message.birthday" text-align="right" readonly="readonly">
           </x-input>
@@ -48,7 +48,6 @@
 
 <script type="text/ecmascript-6">
   const ERROR_OK = 200;
-  import { axios } from '@/router/config';
   import Cropper from 'cropperjs';
   import {
     Scroller,
@@ -67,14 +66,9 @@
   export default {
     data () {
       return {
-        images: [
-          'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
-          'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
-          'https://o3e85j0cv.qnssl.com/hot-chocolate-1068703__340.jpg'
-        ],
         url: 'https://o3e85j0cv.qnssl.com/tulips-1083572__340.jpg',
         ChinaAddressV3Data: ChinaAddressV3Data,
-        message: {},
+        message: '',
         address: '',
         headerImage: '',
         picValue: '',
@@ -183,14 +177,15 @@
         formData.append('file', pic);
         formData.append('userId', sessionStorage.getItem('userId'));
         //console.log('userId' + formData.get('userId')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
-        axios('put', '/updateImg', formData, data => {});
+        this.axios('put', '/updateImg', formData, data => {});
       },
       getUserMessage () {
         var self = this;
-        axios('get', '/getUserMessage', {}, data => {
+        this.axios('get', '/getUserMessage', {}, data => {
           if (data.status === ERROR_OK) {
             self.message = data.data;
             self.address = `${self.message.province} ${self.message.city} ${self.message.area}`;
+            self.headerImage = self.message.header.length > 0 ? self.QiNiu + self.message.header : self.message.header;
           }
         });
       },
@@ -281,6 +276,7 @@
       .desc {
         font-size: 15px;
         margin-top: 5px;
+        height: 17px;
         .iconfont {
           margin-left: 10px;
           &.icon-xingbie-nan {

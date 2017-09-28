@@ -98,8 +98,9 @@
               city: value2name(self.address, ChinaAddressV3Data).split(' ')[1],
               area: value2name(self.address, ChinaAddressV3Data).split(' ')[2]
             }, data => {
-              console.log(data);
-              debugger;
+              if (data.status === ERROR_OK) {
+                self.back();
+              }
             });
         }
       },

@@ -8,8 +8,9 @@ import Axios from 'axios';
 import qs from 'qs';
 const ajax = Axios.create({
   //baseURL: 'http://47.93.236.234:3000'
-  baseURL: 'http://192.168.0.104:3001'
+  baseURL: 'http://172.16.0.61:3001'
 });
+const QiNiu = 'http://ovdstxl7y.bkt.clouddn.com/';
 ajax.defaults.withCredentials = true;
 const axios = (method, path, data, callback) => {
   data['userId'] = sessionStorage.getItem('userId');
@@ -41,6 +42,7 @@ const axios = (method, path, data, callback) => {
   } else if (method === 'put') {
     ajax.defaults.headers.post['Content-Type'] = 'multipart/form-data';
     ajax.post(path, data).then((response) => {
+      debugger;
       if (response.data.status === -1) {
         alert(response.data.message);
         window.location.href = '/login';
@@ -74,4 +76,4 @@ const formatDate = (date, fmt) => {
 function padLeftZero (str) {
   return ('00' + str).substr(str.length);
 }
-export { axios, formatDate };
+export { axios, QiNiu, formatDate };
