@@ -23,6 +23,8 @@ import NotEmail from '@/views/login/notAvailableEmail';
 import article from '@/views/article';
 
 import user from '@/views/user/index';
+import userCenter from '@/views/user/userCenter';
+import writerArticle from '@/views/user/writerArticle';
 import updateMessage from '@/views/user/updateMessage';
 import upload from '@/views/user/upload';
 
@@ -84,11 +86,21 @@ const routes = [
   },
   {
     path: '/user',
-    component: user
-  },
-  {
-    path: '/updateMessage',
-    component: updateMessage
+    component: user,
+    redirect: '/userCenter',
+    children: [
+      {
+        path: '/userCenter',
+        component: userCenter
+      },
+      {
+        path: '/updateMessage',
+        component: updateMessage
+      },
+      {
+        path: '/writerArticle',
+        component: writerArticle
+      }]
   },
   {
     path: '/upload',
