@@ -7,7 +7,7 @@
       </div>
       <button type="button" id="button" @click="crop">确定</button>
     </div>
-    <div style="padding:20px;">
+    <div style="padding:20px;"  id='image'>
       <div class="show">
         <div class="picture" :style="'backgroundImage:url('+headerImage+')'">
         </div>
@@ -67,7 +67,7 @@
         this.panel = true;
         this.picValue = files[0];
         this.url = this.getObjectURL(this.picValue);
-        //每次替换图片要重新得到新的url
+        //每次替换图片要重新得到新的urls
         if (this.cropper) {
           this.cropper.replace(this.url);
         }
