@@ -1,44 +1,105 @@
 <template>
   <div class="writerArticle">
-    <x-header>写日志<a slot="right">发表</a></x-header>
+    <div class="vux-header  vux-1px-b">
+      <x-header>写日志<a slot="right">发表</a></x-header>
+    </div>
     <div class="writerArticle_content">
       <x-input :title="'标题'" class="title vux-1px-b"></x-input>
-      <x-textarea :height="txtHeight" name="description" placeholder='正文' class="txt"></x-textarea>
+      <editor :content="content" class="needsclick" :height="txtHeight()" :z-index="3000" :auto-height="false"
+              @change="updateData"></editor>
     </div>
-    <div class="writerArticle_bottom">
+    <div class="writerArticle_bottom vux-1px-t">
+      <span class="save">保存至草稿</span>
     </div>
-    <!-- 遮罩层 -->
-    <div class="container" v-show="panel">
-      <div>
-        <img id="image" :src="url" alt="Picture">
-      </div>
-      <button type="button" id="button" @click="crop">确定</button>
-    </div>
-    <div style="padding:20px;">
-      <div class="show">
-        <div class="picture" :style="'backgroundImage:url('+headerImage+')'">
-        </div>
-      </div>
-      <div>
-        <input type="file" id="change" name="file" accept="image/png,image/gif,image/jpeg" @change="change">
-      </div>
-    </div>
-    <span class="save">保存至草稿</span>
   </div>
-
-
 </template>
-
 <script type="text/ecmascript-6">
-  import Cropper from 'cropperjs';
+  import VueHtml5Editor from 'vue-html5-editor';
+  const editor = new VueHtml5Editor({
+    language: 'zh-cn',
+    hiddenModules: [
+      'color',
+      'text',
+      'font',
+      'link',
+      'tabulation',
+      'info',
+      'undo',
+      'hr',
+      'eraser',
+      'unlink'
+    ],
+    icons: {
+      text: 'fa fa-pencil',
+      color: 'fa fa-paint-brush',
+      font: 'fa fa-font',
+      align: 'fa fa-align-justify',
+      list: 'fa fa-list',
+      link: 'fa fa-chain',
+      unlink: 'fa fa-chain-broken',
+      tabulation: 'fa fa-table',
+      image: 'fa fa-file-image-o',
+      hr: 'fa fa-minus',
+      eraser: 'fa fa-eraser',
+      undo: 'fa-undo fa',
+      'full-screen': 'fa fa-arrows-alt',
+      info: 'fa fa-info'
+    },
+    visibleModules: [
+      'text',
+      'color',
+      'font',
+      'align',
+      'list',
+      'link',
+      'unlink',
+      'tabulation',
+      'image',
+      'hr',
+      'eraser',
+      'undo',
+      'full-screen',
+      'info'
+    ],
+    //配置图片模块
+    //config image module
+    image: {
+      //文件最大体积，单位字节  max file size
+      sizeLimit: 512 * 1024,
+      //上传参数,默认把图片转为base64而不上传
+      //upload config,default null and convert image to base64
+      upload: {
+        url: null,
+        headers: {},
+        params: {},
+        fieldName: {}
+      },
+      //压缩参数,默认使用localResizeIMG进行压缩,设置为null禁止压缩
+      //compression config,default resize image by localResizeIMG (https://github.com/think2011/localResizeIMG)
+      //set null to disable compression
+      compress: {
+        width: 1600,
+        height: 1600,
+        quality: 80
+      },
+      //响应数据处理,最终返回图片链接
+      //handle response data，return image url
+      uploadHandler (responseText) {
+        //default accept json data like  {ok:false,msg:"unexpected"} or {ok:true,data:"image url"}
+        var json = JSON.parse(responseText);
+        if (!json.ok) {
+          alert(json.msg);
+        } else {
+          return json.data;
+        }
+      }
+    }
+  });
   import {
     XHeader,
     Scroller,
-    XTextarea,
     Cell,
-    Flexbox,
     Badge,
-    FlexboxItem,
     Blur,
     Group,
     Checker,
@@ -55,14 +116,11 @@
     components: {
       XHeader,
       Scroller,
-      XTextarea,
       Cell,
       Box,
       Badge,
       Icon,
       Blur,
-      Flexbox,
-      FlexboxItem,
       Group,
       Checker,
       CheckerItem,
@@ -70,89 +128,26 @@
       XButton,
       Datetime,
       XAddress,
-      ChinaAddressV3Data
+      ChinaAddressV3Data,
+      editor
     },
     data () {
       return {
-        txtHeight: '',
-        headerImage: '',
-        picValue: '',
-        cropper: '',
-        croppable: false,
-        panel: false,
-        url: ''
+        txtHeight: function () {
+          let $height = document.body.clientHeight;
+          $height = $height - 46 * 3 - 37;//3个group和一个padding
+          return $height;
+        },
+        content: 'Hello World!'
       };
     },
     mounted () {
-      //const $height = document.body.clientHeight;
-      this.txtHeight = 30;  //$height - 46 * 3 - 20;//3个group和一个padding
-      console.log(this.txtHeight);
-      //初始化这个裁剪框
-      //var self = this;
-      var image = document.getElementById('image');
-      this.cropper = new Cropper(image);
+      console.log(this.txtHeight());
     },
     methods: {
-      getObjectURL (file) {
-        var url = null;
-        if (window.createObjectURL !== undefined) { //basic
-          url = window.createObjectURL(file);
-          console.log(url);
-        } else if (window.URL !== undefined) { //mozilla(firefox)
-          url = window.URL.createObjectURL(file);
-        } else if (window.webkitURL !== undefined) { //webkit or chrome
-          url = window.webkitURL.createObjectURL(file);
-        }
-        return url;
-      },
-      change (e) {
-        let files = e.target.files || e.dataTransfer.files;
-        if (!files.length) return;
-        this.panel = true;
-        this.picValue = files[0];
-        this.url = this.getObjectURL(this.picValue);
-        //每次替换图片要重新得到新的urls
-        if (this.cropper) {
-          this.cropper.replace(this.url);
-        }
-        this.panel = true;
-      },
-      crop () {
-        this.panel = false;
-        var croppedCanvas;
-        var roundedCanvas;
-
-        if (!this.croppable) {
-          return;
-        }
-        //Crop
-        croppedCanvas = this.cropper.getCroppedCanvas();
-        //Round
-        roundedCanvas = this.getRoundedCanvas(croppedCanvas);
-
-        this.headerImage = roundedCanvas.toDataURL();
-        this.postImg(this.headerImage);
-      },
-      getRoundedCanvas (sourceCanvas) {
-        var canvas = document.createElement('canvas');
-        //var context = canvas.getContext('2d');
-        var width = sourceCanvas.width;
-        var height = sourceCanvas.height;
-
-        canvas.width = width;
-        canvas.height = height;
-
-        //context.imageSmoothingEnabled = true;
-        //context.drawImage(sourceCanvas, 0, 0, width, height);
-        //context.globalCompositeOperation = 'destination-in';
-        //context.beginPath();
-        //context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI, true);
-       //context.fill();
-
-        return canvas;
-      },
-      postImg (t) {
-        debugger;
+      updateData: function (data) {
+        //sync content to component
+        this.content = data;
       }
     }
   };
@@ -170,7 +165,7 @@
     overflow: hidden;
     color: #666;
     font-size: 16px;
-    background: #dedede;
+    background: #fff;
     .vux-header {
       @include wh(100%, 46px);
       background: #fff;
@@ -203,13 +198,12 @@
     }
     .writerArticle_content {
       flex: 1;
-      flex-flow: column;
-      box-sizing: border-box;
       .title {
         flex: 0 0 30px;
       }
-      textarea {
-        background: #dedede;
+      .needsclick {
+        border: 0;
+        border-radius: 0;
         -webkit-overflow-scrolling: touch;
       }
     }
@@ -236,49 +230,7 @@
         text-align: right;
       }
     }
-    #demo #button {
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      width: 80px;
-      height: 40px;
-      border: none;
-      border-radius: 5px;
-      background: white;
-    }
 
-    #demo .show {
-      width: 100px;
-      height: 100px;
-      overflow: hidden;
-      position: relative;
-      border-radius: 50%;
-      border: 1px solid #d5d5d5;
-    }
-
-    #demo .picture {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
-
-    #demo .container {
-      z-index: 99;
-      position: fixed;
-      padding-top: 60px;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 1);
-    }
-
-    #demo #image {
-      max-width: 100%;
-    }
   }
 
 </style>
