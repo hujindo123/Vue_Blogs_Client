@@ -18,6 +18,7 @@
 
 <style lang="scss" rel="stylesheet/scss">
   @import "../../assets/mixin";
+
   .list1 {
     width: 100%;
     box-sizing: border-box;
@@ -45,7 +46,7 @@
       .time {
         @include csh(#666, 12px, 1.5);
         padding-bottom: 15px;
-        span{
+        span {
           margin-right: 15px;
         }
       }

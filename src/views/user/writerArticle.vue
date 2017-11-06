@@ -27,7 +27,9 @@
       'undo',
       'hr',
       'eraser',
-      'unlink'
+      'unlink',
+      'align',
+      'list'
     ],
     icons: {
       text: 'fa fa-pencil',
@@ -205,6 +207,10 @@
         border: 0;
         border-radius: 0;
         -webkit-overflow-scrolling: touch;
+        img{
+          display: block;
+          max-width: 100%;
+        }
       }
     }
     .writerArticle_bottom {

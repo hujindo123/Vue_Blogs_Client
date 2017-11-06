@@ -30,7 +30,7 @@
             </flexbox-item>
           </flexbox>-->
         <group>
-          <cell :title="'写文章'"   link="/writerArticle">
+          <cell :title="'写文章'" link="/writerArticle">
             <div slot="icon" class="iconfont icon-xiugai icon"></div>
           </cell>
         </group>
@@ -42,7 +42,7 @@
         </group>
         <group>
           <cell :title="'消息'" is-link>
-            <div slot="icon" class="iconfont icon-xiaoxi icon" ></div>
+            <div slot="icon" class="iconfont icon-xiaoxi icon"></div>
             <div class="badge-value" slot="value">
               <span class="vertical-middle">新消息&nbsp;</span>
               <badge text="8"></badge>
@@ -51,7 +51,7 @@
         </group>
         <group>
           <cell :title="'关于'" is-link>
-            <div slot="icon" class="iconfont icon-guanyu icon" ></div>
+            <div slot="icon" class="iconfont icon-guanyu icon"></div>
           </cell>
         </group>
         <group>
@@ -72,8 +72,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const ERROR_OK = 200;
+  //const ERROR_OK = 200;
   import Cropper from 'cropperjs';
+  import { getUserMessage } from 'src/service/getData';
   import {
     Cell,
     Scroller,
@@ -138,7 +139,7 @@
           self.croppable = true;
         }
       });
-      self.getUserMessage();
+      self.initData();
     },
     methods: {
       /*图片*/
@@ -210,9 +211,14 @@
         formData.append('file', pic);
         formData.append('userId', sessionStorage.getItem('userId'));
         //console.log('userId' + formData.get('userId')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
-        this.axios('put', '/updateImg', formData, data => {});
+        this.axios('put', '/updateImg', formData, data => {
+          sessionStorage.setItem('header', data.data.header);
+        });
       },
-      getUserMessage () {
+      async initData () {
+        await getUserMessage();
+      },
+     /*getUserMessage () {
         var self = this;
         this.axios('get', '/getUserMessage', {}, data => {
           if (data.status === ERROR_OK) {
@@ -221,7 +227,7 @@
             self.headerImage = self.message.header.length > 0 ? self.QiNiu + self.message.header : self.message.header;
           }
         });
-      },
+      },*/
       back () {
         this.$router.go(-1);
       }
@@ -267,7 +273,7 @@
     box-sizing: border-box;
     overflow: hidden;
     color: #666;
-    .icon{
+    .icon {
       margin-right: 15px;
       font-size: 20px;
     }
