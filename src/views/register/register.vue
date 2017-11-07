@@ -37,17 +37,15 @@
 </template>
 
 <script>
-  import { axios } from '@/router/config';
-  import { XInput, Group, XButton, Cell, CheckIcon, Alert } from 'vux';
-  import vheader from '@/components/header/singinHeader';
+  //import { axios } from '@/router/config';
+  import { XInput, Group, XButton, Alert } from 'vux';
+  import vheader from 'src/components/header/singinHeader';
   export default {
     components: {
       vheader,
       XInput,
       XButton,
       Group,
-      CheckIcon,
-      Cell,
       Alert
     },
     data () {
@@ -76,13 +74,12 @@
     methods: {
       getValid1 () {
         var self = this;
-        return new Promise(function (resolve, reject) {
-          let patt = /^[a-zA-Z0-9]{4,16}$/;
-          self.valid1 = patt.test(self.account) ? ' ' : '必须是4到16位字母或数字组成';
-          if (self.valid1 === ' ') {
-            resolve();
-          }
-        });
+        let patt = /^[a-zA-Z0-9]{4,16}$/;
+        if (!patt.test(self.account)) {
+          this.valid1 = '账号必须是4到16位字母或数字组成';
+          return false;
+        }
+        return true;
       },
       getValid2 () {
         var self = this;
@@ -134,34 +131,36 @@
       },
       getCaptchas () {
         var self = this;
-        axios('get', '/getCaptchas', {}, data => {
-          if (data.code === 200) {
-            self.captchas = data.data;
-          }
-        });
+        /*axios('get', '/getCaptchas', {}, data => {
+         if (data.code === 200) {
+         self.captchas = data.data;
+         }
+         });*/
       },
       submit () {
         let self = this;
-        Promise.all([this.getValid1(), this.getValid2(), this.getValid3(), this.getValid4(), this.getValid5(), this.getValid6()]).then(function (val) {
-          axios('get', '/register',
-            {
-              account: self.account,
-              nickname: self.nickname,
-              email: self.email,
-              password: self.password,
-              validCode: self.validCode
-            }, data => {
-              self.show2 = true;
-              if (data.status === 200) {
-                //self.title = '登录失败'
-                self.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';
-                self.$router.push(`/needActive?a=${data.data.account}`);
-              } else {
-                //self.title = '登录失败'
-                self.content = data.message;
-              }
-            });
-        });
+        /*
+         Promise.all([this.getValid1(), this.getValid2(), this.getValid3(), this.getValid4(), this.getValid5(), this.getValid6()]).then(function (val) {
+         axios('get', '/register',
+         {
+         account: self.account,
+         nickname: self.nickname,
+         email: self.email,
+         password: self.password,
+         validCode: self.validCode
+         }, data => {
+         self.show2 = true;
+         if (data.status === 200) {
+         //self.title = '登录失败'
+         self.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';
+         self.$router.push(`/needActive?a=${data.data.account}`);
+         } else {
+         //self.title = '登录失败'
+         self.content = data.message;
+         }
+         });
+         });
+         */
       }
     }
   };

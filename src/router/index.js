@@ -2,10 +2,10 @@
 import itemGame from '@/components/index/itemGame';
 import itemNews from '@/components/index/itemNews';*/
 
-/*import register from '@/views/register/register';
-import active from '@/views/register/active';
-import hasActive from '@/views/register/hasActive';
-import needActive from '@/views/register/needActive';*/
+import register from 'src/views/register/register';
+/*import active from 'src/views/register/active';
+import hasActive from 'src/views/register/hasActive';
+import needActive from 'src/views/register/needActive';*/
 
 import login from 'src/views/login/login';
 /*import forget from '@/views/login/forgetPassword';
@@ -34,12 +34,12 @@ const routes = [
         component: itemNews
       }
     ]
-  },
+  },*/
   {
     path: '/register',
     component: register
   },
-  {
+/*{
     path: '/active',
     component: active
   },

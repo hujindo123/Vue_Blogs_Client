@@ -28,11 +28,10 @@ axios.interceptors.request.use((config) => {
 //返回状态判断(添加响应拦截器)
 axios.interceptors.response.use((res) => {
   //对响应数据做些事
-  if (!res.data.success) {
+  if (!res.data.status) {
     //_.toast(res.data.msg);
     return Promise.reject(res);
   }
-  debugger;
   return res;
 }, (error) => {
   //404等问题可以在这里处理
@@ -40,27 +39,19 @@ axios.interceptors.response.use((res) => {
   return Promise.reject(error);
 });
 
-export default (path, data, method) => {
-  //const m = method ? 'POST' : 'GET';
+export default async (path, data, method) => {
+  const m = method ? 'POST' : 'GET';
   data['userId'] = sessionStorage.getItem('userId');
-  return new Promise((resolve, reject) => {
-    axios.get(path, data)
-      .then(function (res) {
-        console.log(res);
-        resolve(res);
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-   /*axios({
+  return new Promise(function (resolve, reject) {
+    axios({
       method: m,
       url: path,
       params: data
     }).then(response => {
       resolve(response.data);
     }).catch(error => {
-      reject(error.msg);
-    });*/
+      reject(error.data);
+    });
   });
 };
 

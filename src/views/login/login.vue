@@ -31,9 +31,8 @@
 </template>
 
 <script>
-  //import { login } from 'src/service/getData';
-  import axios from 'axios';
-  import { XInput, Group, XButton, Cell, XSwitch, CheckIcon, Alert } from 'vux';
+  import { login } from 'src/service/getData';
+  import { XInput, Group, XButton, Cell, XSwitch, Alert } from 'vux';
   import vheader from 'src/components/header/singinHeader';
   export default {
     components: {
@@ -42,7 +41,6 @@
       XInput,
       XButton,
       Group,
-      CheckIcon,
       Cell,
       Alert
     },
@@ -75,48 +73,28 @@
         }
         return true;
       },
-      singUp () {
-        let self = this;
+      async singUp () {
         if (this.accountValid() && this.passwordValid()) {
-          /*login(self.account, self.password).then(res => {
-           debugger;
-           }).catch((err) => {
-           debugger;
-           console.log(err);
-           });
-           console.log(123);*/
-          axios.get('http://172.16.0.61:3001/login', {
-            account: self.account,
-            password: self.password
-          })
-            .then(function (res) {
-              console.log(res);
-            })
-            .catch(function (err) {
-              console.log(err);
-            });
+          let result;
+          try {
+            result = await login(this.account, this.password);
+            if (result.status === 200) {
+              sessionStorage.setItem('userId', result.userId);
+              sessionStorage.setItem('header', result.header);
+              this.$router.push('/');
+            } else {
+              throw new Error(result);
+            }
+          } catch (e) {
+            if (result.status === 300) {
+              this.$router.push(`/needActive?a=${result.account}`);
+            } else {
+              this.show2 = true;
+              //self.title = '登录失败'
+              this.content = result.message;
+            }
+          }
         }
-        /*Promise.all([this.accountValid(), this.passwordValid()]).then(function (val) {
-         debugger;
-         login(self.account, self.password);
-         /!*axios('get', '/login',
-         {
-         account: self.account,
-         password: self.password
-         }, data => {
-         if (data.status === 200) {
-         sessionStorage.setItem('userId', data.data.userId);
-         sessionStorage.setItem('header', data.data.header);
-         self.$router.push('/');
-         } else if (data.status === 1) {
-         self.$router.push(`/needActive?a=${data.account}`);
-         } else {
-         self.show2 = true;
-         //self.title = '登录失败'
-         self.content = data.message;
-         }
-         });*!/
-         });*/
       }
     }
   };
