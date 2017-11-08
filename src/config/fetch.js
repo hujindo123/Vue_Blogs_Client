@@ -3,6 +3,7 @@
  */
 import axios from 'axios';
 import qs from 'qs';
+
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 50000; //响应时间
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
@@ -41,7 +42,10 @@ axios.interceptors.response.use((res) => {
 
 export default async (path, data, method) => {
   const m = method ? 'POST' : 'GET';
-  data['userId'] = sessionStorage.getItem('userId');
+  if (!data) {
+    data = {};
+  }
+  data['userId'] = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : '';
   return new Promise(function (resolve, reject) {
     axios({
       method: m,

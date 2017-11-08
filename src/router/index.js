@@ -4,8 +4,8 @@ import itemNews from '@/components/index/itemNews';*/
 
 import register from 'src/views/register/register';
 /*import active from 'src/views/register/active';
-import hasActive from 'src/views/register/hasActive';
-import needActive from 'src/views/register/needActive';*/
+import hasActive from 'src/views/register/hasActive';*/
+import needActive from 'src/views/register/needActive';
 
 import login from 'src/views/login/login';
 /*import forget from '@/views/login/forgetPassword';
@@ -47,10 +47,11 @@ const routes = [
     path: '/hasActive',
     component: hasActive
   },
+ */
   {
-    path: '/needActive',
+    path: '/needActive/:account',
     component: needActive
-  },*/
+  },
   {
     path: '/login',
     component: login

@@ -87,10 +87,9 @@
             }
           } catch (e) {
             if (result.status === 300) {
-              this.$router.push(`/needActive?a=${result.account}`);
+              this.$router.push(`/needActive/${result.account}`);
             } else {
               this.show2 = true;
-              //self.title = '登录失败'
               this.content = result.message;
             }
           }
@@ -109,12 +108,25 @@
     position: relative;
     .wrapper_main {
       flex: 1;
+      &.reg_main {
+        .weui-cells {
+          margin-top: 0;
+        }
+      }
+      .yz {
+        padding: 3px 10px;
+        height: 13px;
+        @include csh(#FF0000, 12px, 13px);
+      }
       .login_state {
         color: #999;
       }
       .submit {
         margin-top: 20px;
+        width: 80%;
         margin-bottom: 20px;
+        color: #fff;
+        @include bg();
       }
       .login_more {
         margin-top: 40px;

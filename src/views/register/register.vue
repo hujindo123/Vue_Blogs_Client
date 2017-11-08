@@ -3,28 +3,28 @@
     <vheader></vheader>
     <div class="wrapper_main reg_main">
       <group title="新用户注册">
-        <x-input placeholder="账号" required @on-change="getValid1" v-model="account"></x-input>
+        <x-input placeholder="账号" required @on-change="accountValid" v-model="account"></x-input>
       </group>
       <p class="yz">{{valid1}}</p>
       <group>
-        <x-input placeholder="昵称" required @on-change="getValid2" v-model="nickname"></x-input>
+        <x-input placeholder="昵称" required @on-change="nicknameValid" v-model="nickname"></x-input>
       </group>
       <p class="yz">{{valid2}}</p>
       <group>
-        <x-input placeholder="Email" required @on-change="getValid3" v-model="email"></x-input>
+        <x-input placeholder="Email" required @on-change="emailValid" v-model="email"></x-input>
       </group>
       <p class="yz">{{valid3}}</p>
       <group>
-        <x-input placeholder="密码" required type="password" @on-change="getValid4" v-model="password"></x-input>
+        <x-input placeholder="密码" required type="password" @on-change="passValid" v-model="password"></x-input>
       </group>
       <p class="yz">{{valid4}}</p>
       <group>
-        <x-input placeholder="确认密码" required type="password" @on-change="getValid5" v-model="rpwd"></x-input>
+        <x-input placeholder="确认密码" required type="password" @on-change="rpassValid" v-model="rpwd"></x-input>
       </group>
       <p class="yz">{{valid5}}</p>
       <group>
         <div class="yzm">
-          <x-input placeholder="验证码" class="yzmInput" required @on-change="getValid6" v-model="validCode"></x-input>
+          <x-input placeholder="验证码" class="yzmInput" required @on-change="capValid" v-model="validCode"></x-input>
           <div class="yzmButtons vux-1px-l" @click="getCaptchas"><img :src="captchas"/></div>
         </div>
       </group>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  //import { axios } from '@/router/config';
+  import { getCaptchas, register } from 'src/service/getData';
   import { XInput, Group, XButton, Alert } from 'vux';
   import vheader from 'src/components/header/singinHeader';
   export default {
@@ -72,95 +72,81 @@
       this.getCaptchas();
     },
     methods: {
-      getValid1 () {
-        var self = this;
+      accountValid () {
         let patt = /^[a-zA-Z0-9]{4,16}$/;
-        if (!patt.test(self.account)) {
+        if (!patt.test(this.account)) {
           this.valid1 = '账号必须是4到16位字母或数字组成';
           return false;
         }
+        this.valid1 = '';
         return true;
       },
-      getValid2 () {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-          self.valid2 = self.nickname ? ' ' : '请填写有效的昵称';
-          if (self.valid2 === ' ') {
-            resolve();
+      nicknameValid () {
+        if (!this.nickname) {
+          this.valid2 = '请填写有效的昵称';
+          return false;
+        }
+        this.valid2 = '';
+        return true;
+      },
+      emailValid () {
+        let patt = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+        if (!patt.test(this.email)) {
+          self.valid3 = '请填写有效的Email';
+          return false;
+        }
+        this.valid3 = '';
+        return true;
+      },
+      passValid () {
+        let patt = /^[a-zA-Z0-9]{4,16}$/;
+        if (!patt.test(this.password)) {
+          this.valid4 = '必须是4到16位字母或数字组成';
+          return false;
+        }
+        this.valid4 = '';
+        return true;
+      },
+      rpassValid () {
+        if (this.password !== this.rpwd) {
+          this.valid5 = '密码不一致';
+          return false;
+        }
+        this.valid5 = '';
+        return true;
+      },
+      capValid () {
+        if (!this.validCode) {
+          this.valid6 = '请填写有效的验证码';
+          return false;
+        }
+        this.valid6 = '';
+        return true;
+      },
+      async getCaptchas () {
+        try {
+          let result = await getCaptchas();
+          this.captchas = result.data;
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      async submit () {
+        if (this.accountValid() && this.nicknameValid() && this.emailValid() && this.passValid() && this.rpassValid() && this.CapValid()) {
+          let result;
+          try {
+            result = await register(this.account, this.nickname, this.email, this.password, this.validCode);
+            this.show2 = true;
+            if (result.status === 200) {
+              this.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';
+              this.$router.push(`/needActive/${result.data.account}`);
+            } else {
+              throw new Error(result);
+            }
+          } catch (e) {
+            this.content = e.message;
           }
-        });
-      },
-      getValid3 () {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-          let patt = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-          self.valid3 = patt.test(self.email) ? ' ' : '请填写有效的Email';
-          if (self.valid3 === ' ') {
-            resolve();
-          }
-        });
-      },
-      getValid4 () {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-          let patt = /^[a-zA-Z0-9]{4,16}$/;
-          self.valid4 = patt.test(self.password) ? ' ' : '必须是4到16位字母或数字组成';
-          if (self.valid4 === ' ') {
-            resolve();
-          }
-        });
-      },
-      getValid5 () {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-          self.valid5 = self.password === self.rpwd ? ' ' : '密码不一致  ';
-          if (self.valid5 === ' ') {
-            console.log(5);
-            resolve();
-          }
-        });
-      },
-      getValid6 () {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-          self.valid6 = self.validCode ? ' ' : '请填写有效的验证码';
-          if (self.valid6 === ' ') {
-            resolve();
-          }
-        });
-      },
-      getCaptchas () {
-        var self = this;
-        /*axios('get', '/getCaptchas', {}, data => {
-         if (data.code === 200) {
-         self.captchas = data.data;
-         }
-         });*/
-      },
-      submit () {
-        let self = this;
-        /*
-         Promise.all([this.getValid1(), this.getValid2(), this.getValid3(), this.getValid4(), this.getValid5(), this.getValid6()]).then(function (val) {
-         axios('get', '/register',
-         {
-         account: self.account,
-         nickname: self.nickname,
-         email: self.email,
-         password: self.password,
-         validCode: self.validCode
-         }, data => {
-         self.show2 = true;
-         if (data.status === 200) {
-         //self.title = '登录失败'
-         self.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';
-         self.$router.push(`/needActive?a=${data.data.account}`);
-         } else {
-         //self.title = '登录失败'
-         self.content = data.message;
-         }
-         });
-         });
-         */
+        }
       }
     }
   };
