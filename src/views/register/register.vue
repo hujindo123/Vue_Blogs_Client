@@ -132,7 +132,7 @@
         }
       },
       async submit () {
-        if (this.accountValid() && this.nicknameValid() && this.emailValid() && this.passValid() && this.rpassValid() && this.CapValid()) {
+        if (this.accountValid() && this.nicknameValid() && this.emailValid() && this.passValid() && this.rpassValid() && this.capValid()) {
           let result;
           try {
             result = await register(this.account, this.nickname, this.email, this.password, this.validCode);
@@ -141,7 +141,7 @@
               this.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';
               this.$router.push(`/needActive/${result.data.account}`);
             } else {
-              throw new Error(result);
+              throw new Error(result.message);
             }
           } catch (e) {
             this.content = e.message;

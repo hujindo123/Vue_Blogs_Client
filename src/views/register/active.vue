@@ -1,8 +1,8 @@
 <template>
-  <div class="register" v-if="username">
+  <div class="register" v-if="this.$route.params.account">
     <vheader></vheader>
     <div class="active_main">
-      <div class="nickname">尊敬的 {{username}}</div>
+      <div class="nickname">尊敬的 {{this.$route.params.account}}</div>
       <div>
         感谢您使用江湖。
         <div>
@@ -16,8 +16,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { axios } from '@/router/config';
-  import vheader from '@/components/header/singinHeader';
+  import { actives } from 'src/service/getData';
+  import vheader from 'src/components/header/singinHeader';
   import { Alert } from 'vux';
   export default {
     components: {
@@ -26,41 +26,16 @@
     },
     data () {
       return {
-        username: '',
-        code: '',
         show2: false,
         content: ''
       };
     },
-    created () {
-      if (this.queryString('a')) {
-        this.username = this.queryString('a');
-        this.code = this.queryString('b');
-      }
-    },
     methods: {
-      queryString (name) {
-        let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-        let r = window.location.search.substr(1).match(reg);
-        if (r !== null) return unescape(r[2]);
-        return null;
-      },
-      active () {
-        var self = this;
-        axios('get', '/actives', {
-          account: self.username,
-          code: self.code
-        }, data => {
-          if (data.status === 200) {
-            if (data.code === 1 || data.code === 2) {
-              //已激活 && 激活成功
-              self.$router.push('/hasActive');
-            }
-          } else {
-            self.show2 = true;
-            self.content = data.message;
-          }
-        });
+      async active () {
+        let result;
+        result = await actives(this.$route.params.account, this.$route.params.code);
+        this.show2 = true;
+        this.content = result.message;
       }
     }
   };

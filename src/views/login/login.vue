@@ -63,6 +63,7 @@
           this.valid1 = '账号必须是4到16位字母或数字组成';
           return false;
         }
+        this.valid1 = '';
         return true;
       },
       passwordValid () {
@@ -71,27 +72,25 @@
           this.valid4 = '密码必须是4到16位字母或数字组成';
           return false;
         }
+        this.valid4 = '';
         return true;
       },
       async singUp () {
         if (this.accountValid() && this.passwordValid()) {
-          let result;
           try {
-            result = await login(this.account, this.password);
+            let result = await login(this.account, this.password);
             if (result.status === 200) {
               sessionStorage.setItem('userId', result.userId);
               sessionStorage.setItem('header', result.header);
               this.$router.push('/');
-            } else {
-              throw new Error(result);
-            }
-          } catch (e) {
-            if (result.status === 300) {
+            } else if (result.status === 300) {
               this.$router.push(`/needActive/${result.account}`);
             } else {
-              this.show2 = true;
-              this.content = result.message;
+              throw new Error(result.message);
             }
+          } catch (e) {
+            this.show2 = true;
+            this.content = e.message;
           }
         }
       }

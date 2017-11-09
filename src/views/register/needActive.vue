@@ -13,57 +13,49 @@
         <Cell :title="'未收到邮件，重新发送邮件'" @click.native="updateEmailCode"></Cell>
       </group>
     </div>
+    <div v-transfer-dom>
+      <loading :show="show1" :text="'发送中'"></loading>
+    </div>
     <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import { Group, Cell, Alert } from 'vux';
+  import { Group, Cell, Alert, Loading, TransferDomDirective as TransferDom } from 'vux';
   import { updateEmailCode } from 'src/service/getData';
   import vheader from 'src/components/header/singinHeader';
   export default {
+    directives: {
+      TransferDom
+    },
     components: {
       vheader,
+      Loading,
       Group,
       Cell,
       Alert
     },
     data () {
       return {
+        show1: false,
         show2: false,
         content: '',
-        block: false
+        block: false,
+        text1: 'Processing'
       };
     },
     created () {},
     methods: {
       async updateEmailCode () {
-        let result;
+        this.show1 = true;
+        let result = await updateEmailCode(this.$route.params.account);
+        this.show1 = false;
+        this.show2 = true;
         try {
-          result = await updateEmailCode(this.$route.params.account);
-          this.show2 = true;
           this.content = result.message;
         } catch (err) {
-          this.show2 = true;
           this.content = err.message;
         }
-        //var self = this;
-        /*if (!self.block) {
-         axios('get', '/updateEmailCode', {
-         account: self.username
-         }, data => {
-         self.show2 = true;
-         if (data.status === 200) {
-         self.content = '发送成功，请到填写的邮箱激活，即可立即登陆';
-         } else {
-         self.content = data.message;
-         }
-         });
-         }
-         self.block = true;
-         setTimeout(() => {
-         self.block = false;
-         }, 5000);*/
       }
     }
   };

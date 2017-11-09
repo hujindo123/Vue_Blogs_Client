@@ -29,9 +29,31 @@ export const register = (account, nickname, email, password, validCode) => fetch
   validCode: validCode
 });
 /**
- * 激活账号
+ * 发送激活
  */
 export const updateEmailCode = (account) => fetch('/updateEmailCode', {
   account: account
+});
+/**
+ * 激活账号
+ */
+export const actives = (account, code) => fetch('/actives', {
+  account: account,
+  code: code
+});
+/**
+ *  找回密码
+ */
+export const findPass = (email, validCode) => fetch('/findPass', {
+  email: email,
+  validCode: validCode
+});
+/**
+ * 更新密码
+ */
+export const updatePass = (email, code, password) => fetch('/updatePass', {
+  email: email,
+  code: code,
+  password: password
 });
 

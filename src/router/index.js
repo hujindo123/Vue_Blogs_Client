@@ -1,15 +1,15 @@
-/*import Home from '@/views/index';
-import itemGame from '@/components/index/itemGame';
-import itemNews from '@/components/index/itemNews';*/
+import Home from 'src/views/index';
+import itemGame from 'src/components/index/itemGame';
+import itemNews from 'src/components/index/itemNews';
 
 import register from 'src/views/register/register';
-/*import active from 'src/views/register/active';
-import hasActive from 'src/views/register/hasActive';*/
+import active from 'src/views/register/active';
 import needActive from 'src/views/register/needActive';
 
 import login from 'src/views/login/login';
-/*import forget from '@/views/login/forgetPassword';
-import updatePass from '@/views/login/updatePass';
+import forget from 'src/views/login/forgetPassword';
+import updatePass from 'src/views/login/updatePass';
+/*
 import NotEmail from '@/views/login/notAvailableEmail';
 import article from '@/views/article';
 
@@ -20,7 +20,7 @@ import updateMessage from '@/views/user/updateMessage';
 import upload from '@/views/user/upload';*/
 
 const routes = [
-/*{
+  {
     path: '/',
     component: Home,
     redirect: '/itemGame',
@@ -34,20 +34,15 @@ const routes = [
         component: itemNews
       }
     ]
-  },*/
+  },
   {
     path: '/register',
     component: register
   },
-/*{
-    path: '/active',
+  {
+    path: '/active/:account/:code',
     component: active
   },
-  {
-    path: '/hasActive',
-    component: hasActive
-  },
- */
   {
     path: '/needActive/:account',
     component: needActive
@@ -55,15 +50,16 @@ const routes = [
   {
     path: '/login',
     component: login
-  }
-/*{
+  },
+  {
     path: '/forget',
     component: forget
   },
   {
-    path: '/updatePass',
+    path: '/updatePass/:email/:code',
     component: updatePass
-  },
+  }
+/*
   {
     path: '/NotEmail',
     component: NotEmail

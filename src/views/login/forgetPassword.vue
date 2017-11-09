@@ -3,33 +3,40 @@
     <vheader></vheader>
     <div class="wrapper_main">
       <group title="忘记了密码？">
-        <x-input class="yzmInput" placeholder="Email" required @on-change="getValid3" v-model="email"></x-input>
+        <x-input class="yzmInput" placeholder="Email" required @on-change="emailValid" v-model="email"></x-input>
       </group>
       <p class="yz">{{valid3}}</p>
       <group>
         <div class="yzm">
-          <x-input placeholder="验证码" class="yzmInput" required @on-change="getValid6" v-model="validCode"></x-input>
+          <x-input placeholder="验证码" class="yzmInput" required @on-change="codeValid" v-model="validCode"></x-input>
           <div class="yzmButtons vux-1px-l" @click="getCaptchas"><img :src="captchas"/></div>
         </div>
       </group>
       <p class="yz">{{valid6}}</p>
       <x-button type="primary" class="submit" @click.native="findPass">找回密码</x-button>
-      <alert v-model="show2" :content="content" @on-hide="onHide"></alert> <!--:title="title"-->
+      <alert v-model="alert.show2" :content="alert.content" @on-hide="onHide"></alert> <!--:title="title"-->
+      <div v-transfer-dom>
+        <loading :show="show1" :text="'发送中'"></loading>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { axios } from '@/router/config';
-  import { XInput, Group, XButton, Alert } from 'vux';
-  import vheader from '@/components/header/singinHeader';
+  import { getCaptchas, findPass } from 'src/service/getData';
+  import { XInput, Group, XButton, Alert, Loading, TransferDomDirective as TransferDom } from 'vux';
+  import vheader from 'src/components/header/singinHeader';
   export default {
+    directives: {
+      TransferDom
+    },
     components: {
       vheader,
       Group,
       XInput,
       XButton,
-      Alert
+      Alert,
+      Loading
     },
     data () {
       return {
@@ -38,62 +45,64 @@
         email: '',
         valid3: '',
         valid6: '',
-        content: '',
-        show2: false
+        show1: false,
+        alert: {
+          content: '',
+          show2: false,
+          status: false
+        }
       };
     },
     created () {
       this.getCaptchas();
     },
     methods: {
-      getValid3 () {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-          let patt = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-          self.valid3 = patt.test(self.email) ? ' ' : '请填写有效的Email';
-          if (self.valid3 === ' ') {
-            resolve();
-          }
-        });
+      emailValid () {
+        let patt = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+        if (!patt.test(this.email)) {
+          this.valid3 = '请填写有效的Email';
+          return false;
+        }
+        this.valid3 = '';
+        return true;
       },
-      getValid6 () {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-          self.valid6 = self.validCode ? ' ' : '请填写有效的验证码';
-          if (self.valid6 === ' ') {
-            resolve();
-          }
-        });
+      codeValid () {
+        if (!this.validCode) {
+          this.valid6 = '请填写有效的验证码';
+          return false;
+        }
+        this.valid6 = '';
+        return true;
       },
-      getCaptchas () {
-        var self = this;
-        axios('get', '/getCaptchas', {}, data => {
-          if (data.code === 200) {
-            self.captchas = data.data;
-          }
-        });
+      async getCaptchas () {
+        try {
+          let result = await getCaptchas();
+          this.captchas = result.data;
+        } catch (err) {
+          this.show2 = true;
+          this.content = err.message;
+        }
       },
-      findPass () {
-        var self = this;
-        Promise.all([this.getValid3(), this.getValid6()]).then(function (val) {
-          axios('get', '/findPass',
-            {
-              email: self.email,
-              validCode: self.validCode
-            }, data => {
-              if (data.status === 200) {
-                console.log('success');
-              } else {
-                //self.title = '登录失败'
-                self.content = data.message;
-              }
-            });
-          self.show2 = true;
-          self.content = '已发送您邮箱';
-        });
+      async findPass () {
+        if (this.emailValid() && this.codeValid()) {
+          try {
+            this.show1 = true;
+            let result = await findPass(this.email, this.validCode);
+            this.show1 = false;
+            this.alert.status = result.status === 200 ? 'true' : 'false';
+            this.alert.show2 = true;
+            this.alert.content = result.message;
+          } catch (err) {
+            this.show1 = false;
+            this.alert.show2 = true;
+            this.alert.content = err.message;
+          }
+        }
       },
       onHide () {
-        this.$router.push(`/login`);
+        if (this.alert.status) {
+          this.$router.push(`/login`);
+        }
       }
     }
   };

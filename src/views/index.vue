@@ -13,7 +13,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import cmheader from '@/components/header/commonHeader';
+  import cmheader from 'src/components/header/commonHeader';
   export default {
     components: {
       cmheader
