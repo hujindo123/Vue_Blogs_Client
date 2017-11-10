@@ -9,15 +9,13 @@ import needActive from 'src/views/register/needActive';
 import login from 'src/views/login/login';
 import forget from 'src/views/login/forgetPassword';
 import updatePass from 'src/views/login/updatePass';
-/*
-import NotEmail from '@/views/login/notAvailableEmail';
-import article from '@/views/article';
 
-import user from '@/views/user/index';
-import userCenter from '@/views/user/userCenter';
-import writerArticle from '@/views/user/writerArticle';
-import updateMessage from '@/views/user/updateMessage';
-import upload from '@/views/user/upload';*/
+import article from 'src/views/article';
+import user from 'src/views/user/index';
+import userCenter from 'src/views/user/userCenter';
+/*import writerArticle from 'src/views/user/writerArticle';
+import updateMessage from 'src/views/user/updateMessage';
+import upload from 'src/views/user/upload';*/
 
 const routes = [
   {
@@ -40,7 +38,7 @@ const routes = [
     component: register
   },
   {
-    path: '/active/:account/:code',
+    path: '/active/:email/:code',
     component: active
   },
   {
@@ -58,11 +56,6 @@ const routes = [
   {
     path: '/updatePass/:email/:code',
     component: updatePass
-  }
-/*
-  {
-    path: '/NotEmail',
-    component: NotEmail
   },
   {
     path: '/article',
@@ -76,17 +69,18 @@ const routes = [
       {
         path: '/userCenter',
         component: userCenter
-      },
-      {
+      }
+     /*{
         path: '/updateMessage',
         component: updateMessage
       },
       {
         path: '/writerArticle',
         component: writerArticle
-      }]
-  },
-  {
+      }*/
+    ]
+  }
+  /*{
     path: '/upload',
     component: upload
   }*/

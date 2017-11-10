@@ -65,6 +65,7 @@
           <x-input title="地址" :value="address" text-align="right" readonly="readonly"></x-input>
         </group>
       </div>
+      <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
     </scroller>
   </div>
 
@@ -91,7 +92,8 @@
     XAddress,
     ChinaAddressV3Data,
     Box,
-    Icon
+    Icon,
+    Alert
   } from 'vux';
   export default {
     data () {
@@ -105,7 +107,9 @@
         cropper: '',
         croppable: false,
         panel: false,
-        show: false
+        show: false,
+        show2: false,
+        content: ''
       };
     },
     components: {
@@ -216,7 +220,20 @@
         });
       },
       async initData () {
-        await getUserMessage();
+        try {
+          let result = await getUserMessage();
+          this.message = result.data;
+          this.show2 = true;
+          if (result.status === 200) {
+            this.content = result.message;
+            //this.$router.push(`/needActive/${result.data.account}`);
+          } else {
+            console.log(result);
+            throw new Error(result.message);
+          }
+        } catch (e) {
+          this.content = e.message;
+        }
       },
      /*getUserMessage () {
         var self = this;

@@ -1,8 +1,8 @@
 <template>
-  <div class="register" v-if="this.$route.params.account">
+  <div class="register" v-if="this.$route.params.email">
     <vheader></vheader>
     <div class="active_main">
-      <div class="nickname">尊敬的 {{this.$route.params.account}}</div>
+      <div class="nickname">尊敬的 {{this.$route.params.email}}</div>
       <div>
         感谢您使用江湖。
         <div>
@@ -11,7 +11,7 @@
       </div>
       <button class="submit" @click="active">立即激活</button>
     </div>
-    <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
+    <alert v-model="show2" :content="content" @on-hide="onHide"></alert> <!--:title="title"-->
   </div>
 </template>
 
@@ -27,15 +27,22 @@
     data () {
       return {
         show2: false,
-        content: ''
+        content: '',
+        status: 0
       };
     },
     methods: {
       async active () {
         let result;
-        result = await actives(this.$route.params.account, this.$route.params.code);
+        result = await actives(this.$route.params.email, this.$route.params.code);
         this.show2 = true;
         this.content = result.message;
+        this.status = result.status;
+      },
+      onHide () {
+        if (this.status === 200) {
+          this.$router.push(`/login`);
+        }
       }
     }
   };

@@ -37,8 +37,8 @@ export const updateEmailCode = (account) => fetch('/updateEmailCode', {
 /**
  * 激活账号
  */
-export const actives = (account, code) => fetch('/actives', {
-  account: account,
+export const actives = (email, code) => fetch('/actives', {
+  email: email,
   code: code
 });
 /**

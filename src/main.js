@@ -7,6 +7,10 @@ import App from './App';
 import routes from './router/index';
 
 Vue.use(VueRouter);
+/**
+ * config
+ */
+Vue.prototype.QiNiu = 'http://ovdstxl7y.bkt.clouddn.com/';
 
 const router = new VueRouter({
   routes,

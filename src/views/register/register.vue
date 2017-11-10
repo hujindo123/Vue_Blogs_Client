@@ -64,7 +64,6 @@
         valid6: '',
         captchas: '',
         show2: false,
-        title: '',
         content: ''
       };
     },
@@ -133,9 +132,8 @@
       },
       async submit () {
         if (this.accountValid() && this.nicknameValid() && this.emailValid() && this.passValid() && this.rpassValid() && this.capValid()) {
-          let result;
           try {
-            result = await register(this.account, this.nickname, this.email, this.password, this.validCode);
+            let result = await register(this.account, this.nickname, this.email, this.password, this.validCode);
             this.show2 = true;
             if (result.status === 200) {
               this.content = '账号注册成功，请到填写的邮箱激活，即可立即登陆';

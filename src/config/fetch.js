@@ -54,6 +54,9 @@ export default async (path, data, method) => {
     }).then(response => {
       resolve(response.data);
     }).catch(error => {
+      if (error.data.status === 0) {
+        alert(error.data.message);
+      }
       reject(error.data);
     });
   });

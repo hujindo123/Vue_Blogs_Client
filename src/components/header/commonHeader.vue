@@ -39,7 +39,7 @@
       navList
     },
     created () {
-      this.header = sessionStorage.getItem('header');
+      this.header = sessionStorage.getItem('header') === 'undefined' ? false : sessionStorage.getItem('header');
     },
     methods: {
       showTab () {

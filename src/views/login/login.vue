@@ -80,8 +80,9 @@
           try {
             let result = await login(this.account, this.password);
             if (result.status === 200) {
-              sessionStorage.setItem('userId', result.userId);
-              sessionStorage.setItem('header', result.header);
+              debugger;
+              sessionStorage.setItem('userId', result.data.userId);
+              sessionStorage.setItem('header', result.data.header);
               this.$router.push('/');
             } else if (result.status === 300) {
               this.$router.push(`/needActive/${result.account}`);
