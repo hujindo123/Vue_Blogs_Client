@@ -7,7 +7,7 @@
       </group>
       <p class="yz">{{valid1}}</p>
       <group>
-        <x-input placeholder="密码" required type="password" v-model="password" @on-change="passwordValid"></x-input>
+        <x-input placeholder="密码"  type="password" v-model="password" @on-change="passwordValid"></x-input>
       </group>
       <p class="yz">{{valid2}}</p>
       <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
@@ -80,7 +80,6 @@
           try {
             let result = await login(this.account, this.password);
             if (result.status === 200) {
-              debugger;
               sessionStorage.setItem('userId', result.data.userId);
               sessionStorage.setItem('header', result.data.header);
               this.$router.push('/');

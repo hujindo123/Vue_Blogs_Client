@@ -40,13 +40,24 @@ axios.interceptors.response.use((res) => {
   return Promise.reject(error);
 });
 
-export default async (path, data, method) => {
+export default async(path, data, method) => {
   const m = method ? 'POST' : 'GET';
+  /*if (m === 'GET') {
+    let dataStr = '';
+    Object.keys(data).forEach(key => {
+      dataStr += key + '=' + data[key] + '&';
+    });
+    if (dataStr !== '') {
+      dataStr += 'userId=' + sessionStorage.getItem('userId');
+      path = path + '?' + dataStr;
+    }
+  }*/
   if (!data) {
     data = {};
   }
   data['userId'] = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : '';
   return new Promise(function (resolve, reject) {
+    console.log(data);
     axios({
       method: m,
       url: path,
@@ -59,6 +70,24 @@ export default async (path, data, method) => {
       }
       reject(error.data);
     });
+    /*axios.get('/login', {params: datas}).then(function (response) {
+      debugger;
+      console.log(response);
+    })
+      .catch(function (error) {
+        console.log(error);
+      });*/
+   /*axios({
+      method: 'get',
+      url: '/login',
+      params: data
+    }).then(function (response) {
+      debugger;
+      console.log(response);
+    })
+      .catch(function (error) {
+        console.log(error);
+      });*/
   });
 };
 
