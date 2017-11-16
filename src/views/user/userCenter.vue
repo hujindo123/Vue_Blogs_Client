@@ -30,6 +30,16 @@
             </flexbox-item>
           </flexbox>-->
         <group>
+          <x-input title="出生日期" :value="message.birthday" text-align="right" readonly="readonly">
+          </x-input>
+        </group>
+        <group>
+          <x-input title="Email" :value="message.email" text-align="right" readonly="readonly"></x-input>
+        </group>
+        <!--<group>
+          <x-input title="地址" :value="address" text-align="right" readonly="readonly"></x-input>
+        </group>-->
+        <group>
           <cell :title="'写文章'" link="/writerArticle">
             <div slot="icon" class="iconfont icon-xiugai icon"></div>
           </cell>
@@ -53,16 +63,6 @@
           <cell :title="'关于'" is-link>
             <div slot="icon" class="iconfont icon-guanyu icon"></div>
           </cell>
-        </group>
-        <group>
-          <x-input title="出生日期" :value="message.birthday" text-align="right" readonly="readonly">
-          </x-input>
-        </group>
-        <group>
-          <x-input title="Email" :value="message.email" text-align="right" readonly="readonly"></x-input>
-        </group>
-        <group>
-          <x-input title="地址" :value="address" text-align="right" readonly="readonly"></x-input>
         </group>
       </div>
       <alert v-model="show2" :content="content"></alert> <!--:title="title"-->
@@ -115,6 +115,7 @@
     components: {
       Cell,
       Box,
+      Alert,
       Badge,
       Icon,
       Scroller,
@@ -132,18 +133,17 @@
     },
     mounted () {
       //初始化这个裁剪框
-      let self = this;
       let image = document.getElementById('image');
-      self.cropper = new Cropper(image, {
+      this.cropper = new Cropper(image, {
         aspectRatio: 1,
         viewMode: 1,
         background: false,
         zoomable: false,
         ready: function () {
-          self.croppable = true;
+          this.croppable = true;
         }
       });
-      self.initData();
+      this.initData();
     },
     methods: {
       /*图片*/
@@ -207,6 +207,7 @@
       },
       /*图片-end*/
       postImg (t) {
+        debugger;
         let pic = t.split(',')[1];
         /*let config = {
          headers: {'Content-Type': 'multipart/form-data'}
@@ -223,28 +224,16 @@
         try {
           let result = await getUserMessage();
           this.message = result.data;
-          this.show2 = true;
           if (result.status === 200) {
             this.content = result.message;
-            //this.$router.push(`/needActive/${result.data.account}`);
           } else {
-            console.log(result);
+            this.show2 = true;
             throw new Error(result.message);
           }
         } catch (e) {
           this.content = e.message;
         }
       },
-     /*getUserMessage () {
-        var self = this;
-        this.axios('get', '/getUserMessage', {}, data => {
-          if (data.status === ERROR_OK) {
-            self.message = data.data;
-            self.address = `${self.message.province} ${self.message.city} ${self.message.area}`;
-            self.headerImage = self.message.header.length > 0 ? self.QiNiu + self.message.header : self.message.header;
-          }
-        });
-      },*/
       back () {
         this.$router.go(-1);
       }
