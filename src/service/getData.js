@@ -56,4 +56,19 @@ export const updatePass = (email, code, password) => fetch('/updatePass', {
   code: code,
   password: password
 });
+/**
+ * 更新信息
+ */
+export const setMessage = (nickname, sex, birthday, province, city, area) => fetch('/updateUserMessage', {
+  nickname: nickname,
+  sex: sex,
+  birthday: birthday,
+  province: province,
+  city: city,
+  area: area
+});
+/**
+ * 上传头像
+ */
+export const updateImg = (formData) => fetch('/updateImg', {formData}, 'POST');
 

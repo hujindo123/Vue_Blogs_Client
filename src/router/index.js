@@ -13,8 +13,8 @@ import updatePass from 'src/views/login/updatePass';
 import article from 'src/views/article';
 import user from 'src/views/user/index';
 import userCenter from 'src/views/user/userCenter';
-/*import writerArticle from 'src/views/user/writerArticle';
 import updateMessage from 'src/views/user/updateMessage';
+/*import writerArticle from 'src/views/user/writerArticle';
 import upload from 'src/views/user/upload';*/
 
 const routes = [
@@ -69,11 +69,12 @@ const routes = [
       {
         path: '/userCenter',
         component: userCenter
-      }
-     /*{
+      },
+      {
         path: '/updateMessage',
         component: updateMessage
-      },
+      }
+     /*,
       {
         path: '/writerArticle',
         component: writerArticle

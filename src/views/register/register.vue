@@ -37,6 +37,7 @@
 </template>
 
 <script>
+  import axios from 'axios';
   import { getCaptchas, register } from 'src/service/getData';
   import { XInput, Group, XButton, Alert } from 'vux';
   import vheader from 'src/components/header/singinHeader';

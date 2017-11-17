@@ -29,7 +29,7 @@
 
 <script type="text/ecmascript-6">
   const ERROR_OK = 200;
-  import { axios } from '@/router/config';
+  import { getUserMessage, setMessage } from 'src/service/getData';
   import {
     Group,
     XInput,
@@ -69,39 +69,35 @@
       ChinaAddressV3Data
     },
     created () {
-      this.getUserMessage();
+      this.initData();
     },
     methods: {
-      getUserMessage () {
-        var self = this;
-        axios('get', '/getUserMessage', {}, data => {
-          if (data.status === ERROR_OK) {
-            self.nickname = data.data.nickname;
-            self.sex = Number(data.data.sex);
-            self.birthday = data.data.birthday;
-            self.address = [data.data.province, data.data.city, data.data.area];
+      async initData () {
+        try {
+          let result = await getUserMessage();
+          if (result.status === ERROR_OK) {
+            this.nickname = result.data.nickname;
+            this.sex = Number(result.data.sex);
+            this.birthday = result.data.birthday;
+            this.address = [result.data.province, result.data.city, result.data.area];
+          } else {
+            this.show2 = true;
+            throw new Error(result.message);
           }
-        });
+        } catch (e) {
+          this.content = e.message;
+        }
       },
-      setMessage () {
+      async setMessage () {
         const self = this;
         if (self.nickname === '' || self.nickname === undefined || self.nickname === null) {
           self.show2 = true;
           self.content = '用户名不能为空';
         } else {
-          axios('get', '/updateUserMessage',
-            {
-              nickname: self.nickname,
-              sex: self.sex,
-              birthday: self.birthday,
-              province: value2name(self.address, ChinaAddressV3Data).split(' ')[0],
-              city: value2name(self.address, ChinaAddressV3Data).split(' ')[1],
-              area: value2name(self.address, ChinaAddressV3Data).split(' ')[2]
-            }, data => {
-              if (data.status === ERROR_OK) {
-                self.back();
-              }
-            });
+          let result = await setMessage(this.nickname, this.sex, this.birthday, value2name(self.address, ChinaAddressV3Data).split(' ')[0], value2name(self.address, ChinaAddressV3Data).split(' ')[1], value2name(self.address, ChinaAddressV3Data).split(' ')[2]);
+          /*if (data.status === ERROR_OK) {
+           self.back();
+           }*/
         }
       },
       back () {
