@@ -24,4 +24,4 @@ module.exports = app.listen(port, function (err) {
     return;
   }
   console.log('listing at http://localhost:' + port + '\n');
-})
+});

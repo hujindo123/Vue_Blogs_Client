@@ -242,6 +242,7 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+  @import "../../../node_modules/cropperjs/dist/cropper.css";
   @import "../../assets/mixin";
 
   .container {
@@ -254,14 +255,6 @@
     top: 0;
     right: 0;
     background: rgba(0, 0, 0, 1);
-    .cropper-crop-box,
-    .cropper-modal {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    }
     #button {
       position: absolute;
       right: 10px;

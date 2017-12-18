@@ -14,6 +14,7 @@ import article from 'src/views/article';
 import user from 'src/views/user/index';
 import userCenter from 'src/views/user/userCenter';
 import updateMessage from 'src/views/user/updateMessage';
+import writerArticle from 'src/views/user/writerArticle';
 /*import writerArticle from 'src/views/user/writerArticle';
 import upload from 'src/views/user/upload';*/
 
@@ -73,12 +74,11 @@ const routes = [
       {
         path: '/updateMessage',
         component: updateMessage
-      }
-     /*,
+      },
       {
         path: '/writerArticle',
         component: writerArticle
-      }*/
+      }
     ]
   }
   /*{
