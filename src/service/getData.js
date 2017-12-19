@@ -68,7 +68,7 @@ export const setMessage = (nickname, sex, birthday, province, city, area) => fet
   area: area
 });
 /**
- * 上传头像
+ * 上传图片
  */
 export const updateImg = (formData) => fetch('/updateImg', {formData}, 'POST');
 

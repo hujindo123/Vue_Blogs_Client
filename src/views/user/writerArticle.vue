@@ -1,38 +1,33 @@
 <template>
-  <div>
-    <div class="writerArticle">
-      <div class="vux-header  vux-1px-b">
-        <x-header>写日志<a slot="right">发表</a></x-header>
+  <div class="writerArticle">
+    <ViewBox>
+      <div>
+        <div class="vux-header  vux-1px-b">
+          <x-header>写日志<a slot="right">发表</a></x-header>
+        </div>
+        <div class="writerArticle_content">
+          <x-input :title="'标题'" class="title vux-1px-b"></x-input><!-- -->
+          <vue-editor id="editor"
+                      :editorToolbar="customToolbar"
+                      useCustomImageHandler
+                      @imageAdded="handleImageAdded" v-model="htmlForEditor">
+          </vue-editor>
+        </div>
       </div>
-      <div class="writerArticle_content">
-        <x-input :title="'标题'" class="title vux-1px-b"></x-input><!-- -->
-        <quill-editor ref="myTextEditor"
-                      v-model="content"
-                      :options="editorOption"
-                      @blur="onEditorBlur($event)"
-                      @focus="onEditorFocus($event)"
-                      @ready="onEditorReady($event)">
-        </quill-editor>
-        <form action="" method="post" enctype="multipart/form-data" ref="form" id="uploadFormMulti">
-          <input style="display: none" ref="uniqueId" type="file" name="avator" multiple
-                 accept="image/jpg,image/jpeg,image/png,image/gif" @change="uploadImg('uploadFormMulti')">
-        </form>
-
-      </div>
-    </div>
-    <!--  <div class="writerArticle_bottom vux-1px-t">
-        <span class="save">保存至草稿</span>
-      </div>-->
+    </ViewBox>
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import { quillEditor } from 'vue-quill-editor';
+  import { VueEditor } from 'vue2-editor';
+  import { updateImg } from 'src/service/getData';
+  import axios from 'axios';
   /*import Quill from 'quill';
    import { ImageResize } from '../modules/ImageResize.js';
    Quill.register('modules/imageResize', ImageResize);*/
   import {
     XHeader,
     Scroller,
+    ViewBox,
     Cell,
     Badge,
     Blur,
@@ -50,6 +45,7 @@
   export default {
     components: {
       XHeader,
+      ViewBox,
       Scroller,
       Cell,
       Box,
@@ -64,73 +60,61 @@
       Datetime,
       XAddress,
       ChinaAddressV3Data,
-      quillEditor
+      VueEditor
     },
     data () {
       return {
-        content: `<h2 class="ql-align-center"><span class="ql-font-serif">Text content loading..</span></h2>`,
-        editorOption: {
-          //some quill options
-          modules: {
-            toolbar: [
-              ['image']
-            ]
-          }
-        }
+        htmlForEditor: '开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap开发项目，原来的富文本使用的是基于jquery的ckeditor.js，现在用vue需要将项目重新翻新，使用的是vue1.0的版本，求介绍一款vue富文本插件，UI风格类似bootstrap',
+        customToolbar: [
+          /*['bold', 'italic', 'underline'],
+           [{'list': 'ordered'}, {'list': 'bullet'}],*/
+          ['image'] /*'code-block'*/
+        ]
       };
     },
     mounted () {
-      var self = this;
-      var imgHandler = async function (image) {
-        self.addImgRange = self.$refs.myTextEditor.quill.getSelection();
-        if (image) {
-          var fileInput = self.$refs.uniqueId; //隐藏的file文本ID
-          fileInput.click(); //加一个触发事件
-          //button is clicked
-        }
-      };
-      self.$refs.myTextEditor.quill.getModule('toolbar').addHandler('image', imgHandler);
+      document.getElementById('file-upload').setAttribute('enctype', 'multipart/form-data');
+      document.getElementById('file-upload').setAttribute('accept', 'image/*');
     },
     methods: {
-      updateData: function (data) {
-        //sync content to component
-        this.content = data;
+      update (e) {   //上传照片
+        var self = this;
+        let file = e.target.files[0];
+        /*eslint-disable no-undef */
+        let param = new FormData();  //创建form对象
+        param.append('file', file, file.name);  //通过append向form对象添加数据
+        param.append('chunk', '0'); //添加form表单中其他数据
+        console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+        let config = {
+          headers: {'Content-Type': 'multipart/form-data'}
+        };
+        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+        //添加请求头
+        axios.post('http://172.16.0.61:3001/updateImg', param, config)
+          .then(response => {
+            if (response.data.code === 0) {
+              self.ImgUrl = response.data.data;
+            }
+            console.log(response.data);
+          });
       },
-      async onEditorBlur (editor) {
-        console.log('editor blur!', editor);
-      },
-      onEditorFocus (editor) {
-        console.log('editor focus!', editor);
-      },
-      onEditorReady (editor) {
-        console.log('editor ready!', editor);
-      },
-      onEditorChange ({quill, html, text}) {
-        console.log('editor change!', quill, html, text);
-        this.content = html;
-      },
-      uploadImg: async function (id) {
-        debugger;
-        var vm = this;
-        vm.imageLoading = true;
-        var formData = new FormData();//$('#' + id)[0]
-        debugger;
-        /*try {
-          const url = await vm.uploadImgReq(formData);//自定义的图片上传函数
-          if (url != null && url.length > 0) {
-            var value = url;
-            vm.addImgRange = vm.$refs.myTextEditor.quill.getSelection();
-            value = value.indexOf('http') !== -1 ? value : 'http:' + value;
-            vm.$refs.myTextEditor.quill.insertEmbed(vm.addImgRange !== null ? vm.addImgRange.index : 0, 'image', value, Quill.sources.USER);
-          } else {
-            vm.$message.warning('图片增加失败');
-          }
-          document.getElementById(vm.uniqueId).value = '';
-        } catch ({message: msg}) {
-          document.getElementById(vm.uniqueId).value = '';
-          vm.$message.warning(msg);
-        }
-        vm.imageLoading = false;*/
+      handleImageAdded (file, Editor, cursorLocation) {
+        //An example of using FormData
+        //NOTE: Your key could be different such as:
+        //formData.append('file', file)
+        var formData = new FormData();
+        formData.append('type', 1);//通过append向form对象添加数据
+        formData.append('images', file);
+        axios({
+          url: 'http://172.16.0.61:3001/updateImg',
+          method: 'POST',
+          data: formData
+        }).then(result => {
+          let url = this.imageUrl + result.data.url; //Get url from response
+          Editor.insertEmbed(cursorLocation, 'image', url);
+        }).catch(err => {
+          console.log(err);
+        });
       }
     }
   };
@@ -138,103 +122,79 @@
 
 <style lang="scss" rel="stylesheet/scss">
   @import "../../assets/mixin";
-  @import '../../../node_modules/quill/dist/quill.core.css';
-  @import '../../../node_modules/quill/dist/quill.snow.css';
-  @import '../../../node_modules/quill/dist/quill.bubble.css';
 
-  /*  .writerArticle {
-      @include wh(100%, 100%);
-      box-sizing: border-box;
-      display: flex;
-      flex: 1;
-      flex-flow: column;
-      overflow: hidden;
-      color: #666;
-      font-size: 16px;
+  .writerArticle {
+    @include wh(100%, 100%);
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: column;
+    color: #666;
+    font-size: 16px;
+    background: #fff;
+    .vux-header {
+      @include wh(100%, 46px);
       background: #fff;
-      .vux-header {
-        @include wh(100%, 46px);
-        background: #fff;
-        flex: 0 0 46px;
-        top: 0;
-        left: 0;
-        z-index: 0;
-        .vux-header-title {
-          color: #000;
-        }
-        .vux-header-left, .vux-header-right {
-          color: #000;
-          font-size: 16px;
-        }
-        .vux-header-left {
-          a {
-            color: #000;
-          }
-          .left-arrow:before {
-            border: 0;
-            width: 0;
-          }
-          .vux-header-back {
-            padding: 0;
-          }
-        }
-        .vux-header-right a {
-          color: #000;
-        }
+      flex: 0 0 46px;
+      .vux-header-title {
+        color: #000;
       }
-      .writerArticle_content {
-        flex: 1;
-        .title {
-          flex: 0 0 30px;
+      .vux-header-left, .vux-header-right {
+        color: #000;
+        font-size: 16px;
+      }
+      .vux-header-left {
+        a {
+          color: #000;
         }
-        .needsclick {
+        .left-arrow:before {
           border: 0;
-          border-radius: 0;
-          -webkit-overflow-scrolling: touch;
-          img {
-            display: block;
-            max-width: 100%;
-          }
+          width: 0;
+        }
+        .vux-header-back {
+          padding: 0;
         }
       }
-      .writerArticle_bottom {
-        @include wh(100%, 46px);
-        background: #fff;
-        flex: 0 0 46px;
-        line-height: 46px;
-        position: relative;
-        .icon-tupian {
-          font-size: 26px;
-          vertical-align: middle;
-          margin-left: 30px;
-          .file {
-            @include wh(86px, 46px);
+      .vux-header-right a {
+        color: #000;
+      }
+    }
+    .writerArticle_content {
+      display: flex;
+      flex-flow: column;
+      flex: 1;
+      .title {
+        flex: 0 0 30px;
+      }
+      .quillWrapper {
+        flex: 1;
+        display: flex;
+        flex-flow: column;
+        .ql-toolbar {
+          width: 100%;
+          flex: 0 0 50px;
+          border: 0;
+          &:after {
+            width: 120%;
+            content: " ";
             position: absolute;
             left: 0;
-            opacity: 0;
+            bottom: 0;
+            right: 0;
+            height: 1px;
+            border-bottom: 1px solid #C7C7C7;
+            color: #C7C7C7;
+            -webkit-transform-origin: 0 100%;
+            transform-origin: 0 100%;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5);
           }
         }
-        .save {
-          float: right;
-          margin-right: 30px;
-          text-align: right;
+        .ql-container {
+          border: 0;
+          flex: 1;
+          box-sizing: border-box;
         }
       }
-
-    }*/
-  .quill-code {
-    border: none;
-    height: auto;
-    > code {
-      width: 100%;
-      margin: 0;
-      padding: 1rem;
-      border: 1px solid #ccc;
-      border-top: none;
-      border-radius: 0;
-      height: 10rem;
-      overflow-y: auto;
-      resize: vertical;
     }
   }
 </style>
