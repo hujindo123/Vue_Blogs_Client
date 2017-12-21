@@ -1,7 +1,7 @@
 <template>
-  <div class="writerArticle">
-    <ViewBox>
-      <div>
+  <div style="width: 100%;height: 100%;">
+    <view-box>
+      <div class="writerArticle">
         <div class="vux-header  vux-1px-b">
           <x-header>写日志<a slot="right">发表</a></x-header>
         </div>
@@ -14,13 +14,14 @@
           </vue-editor>
         </div>
       </div>
-    </ViewBox>
+    </view-box>
+
   </div>
+
 </template>
 <script type="text/ecmascript-6">
   import { VueEditor } from 'vue2-editor';
   import { updateImg } from 'src/service/getData';
-  import axios from 'axios';
   /*import Quill from 'quill';
    import { ImageResize } from '../modules/ImageResize.js';
    Quill.register('modules/imageResize', ImageResize);*/
@@ -72,10 +73,7 @@
         ]
       };
     },
-    mounted () {
-      document.getElementById('file-upload').setAttribute('enctype', 'multipart/form-data');
-      document.getElementById('file-upload').setAttribute('accept', 'image/*');
-    },
+    mounted () {},
     methods: {
       update (e) {   //上传照片
         var self = this;
@@ -98,23 +96,31 @@
             console.log(response.data);
           });
       },
-      handleImageAdded (file, Editor, cursorLocation) {
-        //An example of using FormData
-        //NOTE: Your key could be different such as:
-        //formData.append('file', file)
-        var formData = new FormData();
+      async handleImageAdded (file, Editor, cursorLocation) {
+        let formData = new FormData();
         formData.append('type', 1);//通过append向form对象添加数据
         formData.append('images', file);
-        axios({
-          url: 'http://172.16.0.61:3001/updateImg',
-          method: 'POST',
-          data: formData
-        }).then(result => {
+        formData.append('userId', sessionStorage.getItem('userId'));
+        try {
+          let result = await this.$http({
+            url: this.baseURL + '/updateImg',
+            method: 'POST',
+            data: formData
+          });
           let url = this.imageUrl + result.data.url; //Get url from response
           Editor.insertEmbed(cursorLocation, 'image', url);
-        }).catch(err => {
-          console.log(err);
-        });
+        } catch (err) {
+          console.log(err.message);
+        }
+        /*this.axios({
+         url: 'http://172.16.0.61:3001/updateImg',
+         method: 'POST',
+         data: formData
+         }).then(result => {
+
+         }).catch(err => {
+         console.log(err);
+         });*/
       }
     }
   };
@@ -171,7 +177,7 @@
         flex-flow: column;
         .ql-toolbar {
           width: 100%;
-          flex: 0 0 50px;
+          height: 50px;
           border: 0;
           &:after {
             width: 120%;
@@ -192,7 +198,6 @@
         .ql-container {
           border: 0;
           flex: 1;
-          box-sizing: border-box;
         }
       }
     }

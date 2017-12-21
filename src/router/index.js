@@ -18,6 +18,8 @@ import writerArticle from 'src/views/user/writerArticle';
 /*import writerArticle from 'src/views/user/writerArticle';
 import upload from 'src/views/user/upload';*/
 
+import map from 'src/views/map';
+
 const routes = [
   {
     path: '/',
@@ -80,6 +82,10 @@ const routes = [
         component: writerArticle
       }
     ]
+  },
+  {
+    path: '/map',
+    component: map
   }
   /*{
     path: '/upload',

@@ -1,47 +1,41 @@
 import Vue from 'vue';
 import {AjaxPlugin} from 'vux';
-let baseUrl = 'http://localhost:3001'; //接口地址;
 Vue.prototype.imageUrl = 'http://ovdstxl7y.bkt.clouddn.com/';
 Vue.use(AjaxPlugin);
-
+let baseURL;
+if (process.env.NODE_ENV === 'development') {
+  Vue.prototype.baseURL = 'http://172.16.0.61:3001';
+  baseURL = 'http://172.16.0.61:3001';
+} else if (process.env.NODE_ENV === 'production') {
+  Vue.prototype.baseURL = 'http://47.93.236.234';
+  baseURL = 'http://47.93.236.234';
+}
 export default async (url, data, method) => {
-  const m = method ? 'POST' : 'GET';
-  if (!data) {
-    data = {};
-  }
   data['userId'] = sessionStorage.getItem('userId') ? sessionStorage.getItem('userId') : '';
-  return new Promise(function (resolve, reject) {
-    if (m === 'POST') {
+  if (method === 'GET') {
+    return new Promise(function (resolve, reject) {
       Vue.http({
-        method: m,
-        url: baseUrl + url,
+        method: method,
+        url: baseURL + url,
         params: data
       }).then(response => {
-        if (response.data.code === 0) {
-          alert(response.data.message);
-        } else {
-          resolve(response.data);
-        };
         resolve(response.data);
       }, (error) => {
         reject(error.data);
       });
-    } else {
+    });
+  } else if (method === 'POST') {
+    return new Promise(function (resolve, reject) {
       Vue.http({
-        method: m,
-        url: baseUrl + url,
-        params: data
+        method: method,
+        url: baseURL + url,
+        data: data
       }).then(response => {
-        if (response.data.code === 0) {
-          alert(response.data.message);
-        } else {
-          resolve(response.data);
-        };
         resolve(response.data);
       }, (error) => {
         reject(error.data);
       });
-    };
-  });
+    });
+  }
 };
 

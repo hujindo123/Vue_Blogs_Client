@@ -5,8 +5,13 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './App';
 import routes from './router/index';
+import BaiduMap from 'vue-baidu-map';
 
 Vue.use(VueRouter);
+Vue.use(BaiduMap, {
+  /*Visit http://lbsyun.baidu.com/apiconsole/key for details about app key. */
+  ak: 'toQ1hMwihrrv8wRtKAIqOeq0EaiOGXi9'
+});
 /**
  * config
  */

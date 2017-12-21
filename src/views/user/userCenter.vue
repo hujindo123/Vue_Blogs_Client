@@ -227,8 +227,9 @@
           if (result.status === 200) {
             this.content = result.message;
           } else {
+            debugger;
             this.show2 = true;
-            throw new Error(result.message);
+            throw new Error(result);
           }
         } catch (e) {
           this.content = e.message;
